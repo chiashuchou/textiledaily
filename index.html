@@ -125,26 +125,23 @@
                 <button onclick="filterCategory('all')" class="cat-btn px-3.5 py-2 rounded-lg text-xs font-bold transition duration-150 bg-indigo-600 text-white shadow" data-target="all">
                     全部資訊 (10)
                 </button>
-                <button onclick="filterCategory('oil-raw')" class="cat-btn px-3.5 py-2 rounded-lg text-xs font-bold transition duration-150 bg-white text-slate-600 hover:bg-slate-100 border border-slate-200" data-target="oil-raw">
-                    原油與化纖原料
+                <button onclick="filterCategory('brand-retail')" class="cat-btn px-3.5 py-2 rounded-lg text-xs font-bold transition duration-150 bg-white text-slate-600 hover:bg-slate-100 border border-slate-200" data-target="brand-retail">
+                    品牌動態與零售
                 </button>
-                <button onclick="filterCategory('yarn-fabric')" class="cat-btn px-3.5 py-2 rounded-lg text-xs font-bold transition duration-150 bg-white text-slate-600 hover:bg-slate-100 border border-slate-200" data-target="yarn-fabric">
-                    紗線與布料
+                <button onclick="filterCategory('law-tariff')" class="cat-btn px-3.5 py-2 rounded-lg text-xs font-bold transition duration-150 bg-white text-slate-600 hover:bg-slate-100 border border-slate-200" data-target="law-tariff">
+                    各國法規與稅則
+                </button>
+                <button onclick="filterCategory('intl-politics')" class="cat-btn px-3.5 py-2 rounded-lg text-xs font-bold transition duration-150 bg-white text-slate-600 hover:bg-slate-100 border border-slate-200" data-target="intl-politics">
+                    國際地緣與情勢
                 </button>
                 <button onclick="filterCategory('tech-equip')" class="cat-btn px-3.5 py-2 rounded-lg text-xs font-bold transition duration-150 bg-white text-slate-600 hover:bg-slate-100 border border-slate-200" data-target="tech-equip">
                     製程技術與設備
-                </button>
-                <button onclick="filterCategory('trends')" class="cat-btn px-3.5 py-2 rounded-lg text-xs font-bold transition duration-150 bg-white text-slate-600 hover:bg-slate-100 border border-slate-200" data-target="trends">
-                    成衣與流行趨勢
-                </button>
-                <button onclick="filterCategory('law-politics')" class="cat-btn px-3.5 py-2 rounded-lg text-xs font-bold transition duration-150 bg-white text-slate-600 hover:bg-slate-100 border border-slate-200" data-target="law-politics">
-                    法規/稅則與台廠影響
                 </button>
             </div>
 
             <!-- 即時搜尋 -->
             <div class="relative w-full lg:w-80">
-                <input type="text" id="search-input" onkeyup="searchNews()" placeholder="搜尋原物料、法規、布種、台廠..." class="w-full pl-10 pr-4 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-xs">
+                <input type="text" id="search-input" onkeyup="searchNews()" placeholder="搜尋品牌、原物料、法規、布種、台廠..." class="w-full pl-10 pr-4 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-xs">
                 <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-slate-400 text-xs"></i>
             </div>
         </div>
@@ -152,194 +149,84 @@
         <!-- 訊息展示區 (24H新聞列表) -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="news-container">
             
-            <!-- 新聞 1: 原油與原料 -->
-            <div class="news-card bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden" data-category="oil-raw">
+            <!-- 新聞 1: 各國法規與稅則 (中國供應鏈法) -->
+            <div class="news-card bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden" data-category="law-tariff">
                 <div class="p-5">
                     <div class="flex justify-between items-start mb-3">
-                        <span class="bg-red-50 text-red-700 text-xs font-bold px-2.5 py-1 rounded">原油與化纖原料</span>
+                        <span class="bg-red-50 text-red-700 text-xs font-bold px-2.5 py-1 rounded">法規與合規</span>
                         <span class="text-[11px] text-slate-400 font-mono">1小時前 (05:00)</span>
                     </div>
                     <h3 class="text-sm font-bold text-slate-900 mb-2 leading-snug hover:text-indigo-600 cursor-pointer">
-                        【原油】美油跌破77美元！需求憂慮延續，WTI單日暴跌5.82%重擊石化鏈
+                        【法規】中國《供應鏈安全法》正式實施，跨國時裝品牌對華常規 ESG 審計面臨合規衝突
                     </h3>
                     <p class="text-xs text-slate-600 mb-4 leading-relaxed">
-                        受美聯儲高利率預期及庫存高企影響，紐約WTI原油跌至76.05美元/桶。成本端坍塌，導致PX亞洲現貨跌至1029美元，給華東PTA加工利潤帶來極大下行壓力，下游採購心態重回觀望。
+                        中國全新《供應鏈安全法》已於 4 月 7 日無過渡期強制執行。新規實施後，跨國服裝品牌及代工廠在華進行的常規盡職調查與碳足跡審計被擴大解讀。法律專家示警，企業若為迎合歐美高透明度及反強迫勞動法規而搜集供應鏈數據，極易踩到中方法律紅線。
                     </p>
                     <div class="flex justify-between items-center text-[11px] text-slate-500 border-t border-slate-100 pt-3">
-                        <span>來源: <strong class="text-slate-700">卓創資訊 / 生意社</strong></span>
-                        <a href="https://trm.sci99.com/chain/chemical_fiber" target="_blank" class="text-indigo-600 hover:underline flex items-center">
+                        <span>來源: <strong class="text-slate-700">Morgan Lewis 摩根路易斯</strong></span>
+                        <a href="https://www.morganlewis.com/news/2026/05/china-law-puts-fashion-brands-in-compliance-bind" target="_blank" class="text-indigo-600 hover:underline flex items-center">
                             查看原文 <i class="fa-solid fa-arrow-up-right-from-square ml-1 text-[10px]"></i>
                         </a>
                     </div>
                 </div>
             </div>
 
-            <!-- 新聞 2: 法規與稅則 -->
-            <div class="news-card bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden" data-category="law-politics">
+            <!-- 新聞 2: 各國法規與稅則 (印美關稅與GST) -->
+            <div class="news-card bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden" data-category="law-tariff">
                 <div class="p-5">
                     <div class="flex justify-between items-start mb-3">
-                        <span class="bg-purple-50 text-purple-700 text-xs font-bold px-2.5 py-1 rounded">法規與稅則</span>
-                        <span class="text-[11px] text-slate-400 font-mono">3小時前 (03:00)</span>
+                        <span class="bg-purple-50 text-purple-700 text-xs font-bold px-2.5 py-1 rounded">稅則變動</span>
+                        <span class="text-[11px] text-slate-400 font-mono">2小時前 (04:00)</span>
                     </div>
                     <h3 class="text-sm font-bold text-slate-900 mb-2 leading-snug hover:text-indigo-600 cursor-pointer">
-                        【法規】歐盟數位產品護照 (DPP) 細則落實，要求進口紡織品強制配備「綠色履歷」
+                        【稅則】印度 GST 2.0 新制登場！強力移除人造纖維與棉花稅率 inversion 痛點，全力抗衡美國 50% 高額關稅
                     </h3>
                     <p class="text-xs text-slate-600 mb-4 leading-relaxed">
-                        歐盟環境委員會發布數位產品護照（DPP）最新實施指引，要求出口歐盟的所有服飾及鞋類，必須在水洗標或吊牌植入 QR Code，詳細揭露可回收比例、碳足跡及 MRSL 限用化學品合規狀態。
-                    </p>
-                    <div class="flex justify-between items-center text-[11px] text-slate-500 border-t border-slate-100 pt-3">
-                        <span>來源: <strong class="text-slate-700">SGS DPP專案組</strong></span>
-                        <a href="https://ticmall.sgs.com/tc/blog_details/sl-knowledge-sharing-unlocking-the-future-of-sustainable-textiles-embracing-the-digital-product-passport-dpp" target="_blank" class="text-indigo-600 hover:underline flex items-center">
-                            查看原文 <i class="fa-solid fa-arrow-up-right-from-square ml-1 text-[10px]"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 新聞 3: 製程技術與新設備 -->
-            <div class="news-card bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden" data-category="tech-equip">
-                <div class="p-5">
-                    <div class="flex justify-between items-start mb-3">
-                        <span class="bg-emerald-50 text-emerald-700 text-xs font-bold px-2.5 py-1 rounded">製程技術與設備</span>
-                        <span class="text-[11px] text-slate-400 font-mono">5小時前 (01:00)</span>
-                    </div>
-                    <h3 class="text-sm font-bold text-slate-900 mb-2 leading-snug hover:text-indigo-600 cursor-pointer">
-                        【技術】Denovia 宣布「無水回收塑料解聚技術」進入商業化規模生產階段
-                    </h3>
-                    <p class="text-xs text-slate-600 mb-4 leading-relaxed">
-                        Denovia 成功將其專利“The Ark”化學解聚技術擴大至商業規模。該技術能不耗費任何一滴水，將含有混紡雜質的聚酯及尼龍面料完全還原成高品質單體，打通產業內「Textile-to-Textile」的真正閉鎖循環。
-                    </p>
-                    <div class="flex justify-between items-center text-[11px] text-slate-500 border-t border-slate-100 pt-3">
-                        <span>來源: <strong class="text-slate-700">Textile World</strong></span>
-                        <a href="https://www.textileworld.com/textile-world/fiber-world/2026/06/denovia-advances-the-ark-from-launch-to-commercial-scale-up-targeting-the-trillion-dollar-plastic-and-textile-waste-opportunity/" target="_blank" class="text-indigo-600 hover:underline flex items-center">
-                            查看原文 <i class="fa-solid fa-arrow-up-right-from-square ml-1 text-[10px]"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 新聞 4: 紗線與布料 -->
-            <div class="news-card bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden" data-category="yarn-fabric">
-                <div class="p-5">
-                    <div class="flex justify-between items-start mb-3">
-                        <span class="bg-amber-50 text-amber-700 text-xs font-bold px-2.5 py-1 rounded">紗線與布料</span>
-                        <span class="text-[11px] text-slate-400 font-mono">8小時前 (昨日 22:00)</span>
-                    </div>
-                    <h3 class="text-sm font-bold text-slate-900 mb-2 leading-snug hover:text-indigo-600 cursor-pointer">
-                        【化纖】江浙聚酯切片跌價，滌短、氨綸報價持平，織造開機率維持在73%
-                    </h3>
-                    <p class="text-xs text-slate-600 mb-4 leading-relaxed">
-                        隨原料 PTA 下跌，半光聚酯切片跌50元至6950元/噸。長絲POY價格微幅下修至8300元/噸。高彈與防透機能面料需求穩健，織造廠採「低價隨用隨買」策略，氨綸40D持穩於29500元/噸。
-                    </p>
-                    <div class="flex justify-between items-center text-[11px] text-slate-500 border-t border-slate-100 pt-3">
-                        <span>來源: <strong class="text-slate-700">錢清原料城 / 卓創</strong></span>
-                        <a href="http://www.tbs-china.com/Hangqing/index.html" target="_blank" class="text-indigo-600 hover:underline flex items-center">
-                            查看行情 <i class="fa-solid fa-arrow-up-right-from-square ml-1 text-[10px]"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 新聞 5: 政經情勢與台廠影響 -->
-            <div class="news-card bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden" data-category="law-politics">
-                <div class="p-5">
-                    <div class="flex justify-between items-start mb-3">
-                        <span class="bg-blue-50 text-blue-700 text-xs font-bold px-2.5 py-1 rounded">台廠影響與政經</span>
-                        <span class="text-[11px] text-slate-400 font-mono">11小時前 (昨日 19:00)</span>
-                    </div>
-                    <h3 class="text-sm font-bold text-slate-900 mb-2 leading-snug hover:text-indigo-600 cursor-pointer">
-                        【台廠】對等關稅陰霾消退！聚陽、振大環球擴充產線，樂觀看好2026年營運表現
-                    </h3>
-                    <p class="text-xs text-slate-600 mb-4 leading-relaxed">
-                        台灣成衣龍頭對2026年出口復甦展現高度信心。聚陽薩爾瓦多新廠及孟加拉新線預計年初投產，振大環球則規劃於越南、印尼擴充2成產能。業者表示客戶下單力道強勁，機能性高附加價值布料訂單為主要增長動力。
-                    </p>
-                    <div class="flex justify-between items-center text-[11px] text-slate-500 border-t border-slate-100 pt-3">
-                        <span>來源: <strong class="text-slate-700">台灣紡織推動計畫</strong></span>
-                        <a href="https://www.textilesinfo.tw/mod/news/index.php?REQUEST_ID=75d9f35204bd83598ebc3de0e835f5a541cae8a1cacf6685e50241eeead4e32f" target="_blank" class="text-indigo-600 hover:underline flex items-center">
-                            查看原文 <i class="fa-solid fa-arrow-up-right-from-square ml-1 text-[10px]"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 新聞 6: 成衣與流行趨勢 -->
-            <div class="news-card bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden" data-category="trends">
-                <div class="p-5">
-                    <div class="flex justify-between items-start mb-3">
-                        <span class="bg-indigo-50 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded">成衣與流行趨勢</span>
-                        <span class="text-[11px] text-slate-400 font-mono">13小時前 (昨日 17:00)</span>
-                    </div>
-                    <h3 class="text-sm font-bold text-slate-900 mb-2 leading-snug hover:text-indigo-600 cursor-pointer">
-                        【趨勢】ISPO發表會：100%「單一材質（Mono-material）」尼龍服飾成戶外運動品牌新寵
-                    </h3>
-                    <p class="text-xs text-slate-600 mb-4 leading-relaxed">
-                        國際品牌加速響應循環經濟，運動和戶外成衣在設計源頭上屏棄 PU 與 Polyester 混紡，轉向開發 100% 同一化學材質的防水透濕外套，大幅簡化物理與化學回收難度，台灣供應鏈機能布廠正同步受惠。
-                    </p>
-                    <div class="flex justify-between items-center text-[11px] text-slate-500 border-t border-slate-100 pt-3">
-                        <span>來源: <strong class="text-slate-700">ISPO / 紡拓會</strong></span>
-                        <a href="https://ws.ndc.gov.tw/001/administrator/18/relfile/6037/9877/5f021be6-7c78-489c-ac89-d9f85318754a.pdf" target="_blank" class="text-indigo-600 hover:underline flex items-center">
-                            查看趨勢報告 <i class="fa-solid fa-arrow-up-right-from-square ml-1 text-[10px]"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 新聞 7: 原油與原料 -->
-            <div class="news-card bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden" data-category="oil-raw">
-                <div class="p-5">
-                    <div class="flex justify-between items-start mb-3">
-                        <span class="bg-red-50 text-red-700 text-xs font-bold px-2.5 py-1 rounded">原油與化纖原料</span>
-                        <span class="text-[11px] text-slate-400 font-mono">15小時前 (昨日 15:00)</span>
-                    </div>
-                    <h3 class="text-sm font-bold text-slate-900 mb-2 leading-snug hover:text-indigo-600 cursor-pointer">
-                        【原料】印度豁免進口棉花關稅，防堵國內紡紗產能受棉花價格暴漲衝擊
-                    </h3>
-                    <p class="text-xs text-slate-600 mb-4 leading-relaxed">
-                        印度財政部發布緊急公告，自 6 月 1 日起至 10 月 31 日，完全免除棉花進口 custom duties。此政策生效後，印度大型紡紗廠已向美棉及西非棉積極詢盤，全球天然棉與混紡化纖產品市場結構將面臨重新洗牌。
+                        印度政府推動 GST 2.0 改革以協助成衣業降本。新政消除了化纖原料的「倒掛稅率（inversion）」並實現纖維中立，且將 5% 優惠稅率上限放寬至 2,500 盧比。然而，美國對印度商品實施高達 50% 的對等關稅，正嚴重威脅印度成衣在美出口競爭力。
                     </p>
                     <div class="flex justify-between items-center text-[11px] text-slate-500 border-t border-slate-100 pt-3">
                         <span>來源: <strong class="text-slate-700">Fibre2Fashion</strong></span>
-                        <a href="https://www.fibre2fashion.com/news/cotton-news/india-exempts-customs-duties-on-cotton-imports-from-jun-1-to-oct-31-310663-newsdetails.htm" target="_blank" class="text-indigo-600 hover:underline flex items-center">
+                        <a href="https://www.fibre2fashion.com/news/textile-news/gst-2-0-boosts-textiles-but-us-tariff-poses-challenge-citi-ey-india-305548-newsdetails.htm" target="_blank" class="text-indigo-600 hover:underline flex items-center">
                             查看原文 <i class="fa-solid fa-arrow-up-right-from-square ml-1 text-[10px]"></i>
                         </a>
                     </div>
                 </div>
             </div>
 
-            <!-- 新聞 8: 製程技術與新設備 -->
-            <div class="news-card bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden" data-category="tech-equip">
+            <!-- 新聞 3: 品牌動態與零售 (Burberry 延期淨零) -->
+            <div class="news-card bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden" data-category="brand-retail">
                 <div class="p-5">
                     <div class="flex justify-between items-start mb-3">
-                        <span class="bg-emerald-50 text-emerald-700 text-xs font-bold px-2.5 py-1 rounded">製程技術與設備</span>
-                        <span class="text-[11px] text-slate-400 font-mono">18小時前 (昨日 12:00)</span>
+                        <span class="bg-indigo-50 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded">品牌策略</span>
+                        <span class="text-[11px] text-slate-400 font-mono">4小時前 (02:00)</span>
                     </div>
                     <h3 class="text-sm font-bold text-slate-900 mb-2 leading-snug hover:text-indigo-600 cursor-pointer">
-                        【設備】BB Engineering 於 ITM 2026 展出全新專利 Valuepack 雙級過濾紡絲箱
+                        【品牌】奢侈品牌氣候政策大退步？Burberry 宣佈推遲「淨零排放目標期限」10 年
                     </h3>
                     <p class="text-xs text-slate-600 mb-4 leading-relaxed">
-                        德國 BB Engineering 於 ITM 2026 展會中推出專利 Valuepack 紡絲箱，首創結合「金屬沙」與「過濾燭」雙級過濾工藝。該技術優化了熔體溫度與粘度均勻性，大幅提升再生切片紡絲性能及紗線品質。
+                        英國奢侈品牌大廠 Burberry 在其最新發布的氣候轉型策略中，將原定 2039/40 會計年度的「淨零碳排」承諾期限向後推遲 10 年，調整至 2049/50。Burberry 坦言，隨著對旗下長尾供應鏈、可追溯性與改用低碳能源製程的深度剖析，原定時程的商業成本代價已非當前市場環境能承擔。
                     </p>
                     <div class="flex justify-between items-center text-[11px] text-slate-500 border-t border-slate-100 pt-3">
-                        <span>來源: <strong class="text-slate-700">Textile World</strong></span>
-                        <a href="https://www.textileworld.com/textile-world/2026/05/bb-engineering-unveils-new-patented-valuepack-spin-pack-at-itm-2026/" target="_blank" class="text-indigo-600 hover:underline flex items-center">
+                        <span>來源: <strong class="text-slate-700">EcoTextile News</strong></span>
+                        <a href="https://muckrack.com/john-mowbray-1/articles" target="_blank" class="text-indigo-600 hover:underline flex items-center">
                             查看原文 <i class="fa-solid fa-arrow-up-right-from-square ml-1 text-[10px]"></i>
                         </a>
                     </div>
                 </div>
             </div>
 
-            <!-- 新聞 9: 成衣與流行趨勢 -->
-            <div class="news-card bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden" data-category="trends">
+            <!-- 新聞 4: 品牌動態與零售 (Tapestry 獲AI專利) -->
+            <div class="news-card bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden" data-category="brand-retail">
                 <div class="p-5">
                     <div class="flex justify-between items-start mb-3">
-                        <span class="bg-indigo-50 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded">成衣與流行趨勢</span>
-                        <span class="text-[11px] text-slate-400 font-mono">20小時前 (昨日 10:00)</span>
+                        <span class="bg-indigo-50 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded">零售科技</span>
+                        <span class="text-[11px] text-slate-400 font-mono">5小時前 (01:00)</span>
                     </div>
                     <h3 class="text-sm font-bold text-slate-900 mb-2 leading-snug hover:text-indigo-600 cursor-pointer">
-                        【織物】PureCycle 泰國 PP 回收廠獲 FastPass 投資加速許可，切入機能與科技用布鏈
+                        【品牌】輕奢巨頭 Tapestry 為其自主研發 AI 導購與趨勢預測平台 "Mira" 取得美國專利
                     </h3>
                     <p class="text-xs text-slate-600 mb-4 leading-relaxed">
-                        PureCycle 泰國子公司獲泰國投資委員會（BOI）批准，納入 FastPass 投資加速計劃。該雷勇府項目生產的超純回收 PP 將用於製造 100% 可回收連續長絲，廣泛應用於成衣、汽車及科技防護用布。
+                        Coach 與 Kate Spade 的母公司 Tapestry 宣布，其內部研發的生成式 AI 平台 "Mira" 已成功榮獲美國專利。Mira 能夠在數秒內整合全球庫存數據、歷史銷售走勢與消費者在線搜尋偏好，協助設計與行銷團隊更早捕捉流行趨勢，優化庫存管理，並將產品上市天數縮短達數週。
                     </p>
                     <div class="flex justify-between items-center text-[11px] text-slate-500 border-t border-slate-100 pt-3">
                         <span>來源: <strong class="text-slate-700">EcoTextile News</strong></span>
@@ -350,23 +237,133 @@
                 </div>
             </div>
 
-            <!-- 新聞 10: 政經情勢與台廠影響 -->
-            <div class="news-card bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden" data-category="law-politics">
+            <!-- 新聞 5: 品牌動態與零售 (Lycra 債務重組) -->
+            <div class="news-card bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden" data-category="brand-retail">
                 <div class="p-5">
                     <div class="flex justify-between items-start mb-3">
-                        <span class="bg-blue-50 text-blue-700 text-xs font-bold px-2.5 py-1 rounded">台廠影響與政經</span>
+                        <span class="bg-indigo-50 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded">產業巨頭</span>
+                        <span class="text-[11px] text-slate-400 font-mono">8小時前 (昨日 22:00)</span>
+                    </div>
+                    <h3 class="text-sm font-bold text-slate-900 mb-2 leading-snug hover:text-indigo-600 cursor-pointer">
+                        【巨頭】彈性纖維霸主萊卡公司（The Lycra Company）正式走出美國 Chapter 11 破產保護，大舉削減 12 億美元債務
+                    </h3>
+                    <p class="text-xs text-slate-600 mb-4 leading-relaxed">
+                        彈性化纖巨頭 The Lycra Company 宣布完成法庭監督下的債務重組計畫，大舉砍掉逾 12 億美元的長期債務，成功走出破產保護程序。雖然資產負債表得以修復，但下游品牌採購與代工廠正密切觀望，其新股東是否會因成本控制而壓縮未來綠色與永續彈性纖維（如生質 Spandex）的研發與推廣預算。
+                    </p>
+                    <div class="flex justify-between items-center text-[11px] text-slate-500 border-t border-slate-100 pt-3">
+                        <span>來源: <strong class="text-slate-700">EcoTextile News</strong></span>
+                        <a href="https://muckrack.com/john-mowbray-1/articles" target="_blank" class="text-indigo-600 hover:underline flex items-center">
+                            查看原文 <i class="fa-solid fa-arrow-up-right-from-square ml-1 text-[10px]"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 新聞 6: 製程技術與設備 (Barmag & Neumag 節能 25%) -->
+            <div class="news-card bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden" data-category="tech-equip">
+                <div class="p-5">
+                    <div class="flex justify-between items-start mb-3">
+                        <span class="bg-emerald-50 text-emerald-700 text-xs font-bold px-2.5 py-1 rounded">製程技術與設備</span>
+                        <span class="text-[11px] text-slate-400 font-mono">11小時前 (昨日 19:00)</span>
+                    </div>
+                    <h3 class="text-sm font-bold text-slate-900 mb-2 leading-snug hover:text-indigo-600 cursor-pointer">
+                        【製程】德國化纖巨頭 Barmag 與 Neumag 於 ITM 2026 聯合展示節能 25% 新一代聚酯 texturing 機械與 BCF 紗工藝
+                    </h3>
+                    <p class="text-xs text-slate-600 mb-4 leading-relaxed">
+                        在土耳其 ITM 2026 展會中，Barmag 展示了 eFK EvoSmart 加彈機，首創採用 EvoHeater 與 Smart Godets 元件，能降低高達 25% 的每公斤加彈能源消耗，並縮減 50% 維護工時。Neumag 則推出 BICO BCF 技術，在不犧牲蓬鬆均一性的前提下，降低 20% 的面層紗線用量，大幅為地毯及機能用布織造降本。
+                    </p>
+                    <div class="flex justify-between items-center text-[11px] text-slate-500 border-t border-slate-100 pt-3">
+                        <span>來源: <strong class="text-slate-700">Textile World</strong></span>
+                        <a href="https://www.textileworld.com/textile-world/fiber-world/2026/03/itm-2026-barmag-and-neumag-showcase-innovations-across-all-manmade-fiber-processes/" target="_blank" class="text-indigo-600 hover:underline flex items-center">
+                            查看原文 <i class="fa-solid fa-arrow-up-right-from-square ml-1 text-[10px]"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 新聞 7: 國際地緣與情勢 (印烏 WTO 簽約) -->
+            <div class="news-card bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden" data-category="intl-politics">
+                <div class="p-5">
+                    <div class="flex justify-between items-start mb-3">
+                        <span class="bg-blue-50 text-blue-700 text-xs font-bold px-2.5 py-1 rounded">國際地緣與貿易</span>
+                        <span class="text-[11px] text-slate-400 font-mono">13小時前 (昨日 17:00)</span>
+                    </div>
+                    <h3 class="text-sm font-bold text-slate-900 mb-2 leading-snug hover:text-indigo-600 cursor-pointer">
+                        【貿易】國際原料版圖洗牌！印度與烏茲別克簽署關鍵 WTO 市場准入議定書，加速優質棉花及天然短纖跨境流通
+                    </h3>
+                    <p class="text-xs text-slate-600 mb-4 leading-relaxed">
+                        印度與中亞棉花強權烏茲別克正式簽署《市場准入議定書》，宣告完成兩國關於烏茲別克加入世界貿易組織（WTO）的雙邊談判。這項協議消除了兩國間短纖及工業織物的關稅壁壘，預計將大幅引進中亞優質棉紗進入南亞市場，進一步舒緩印度及全球天然與混紡原料的價格波動。
+                    </p>
+                    <div class="flex justify-between items-center text-[11px] text-slate-500 border-t border-slate-100 pt-3">
+                        <span>來源: <strong class="text-slate-700">Fibre2Fashion</strong></span>
+                        <a href="https://www.fibre2fashion.com/news/textile-news/india-uzbekistan-sign-key-wto-market-access-protocol-310636-newsdetails.htm" target="_blank" class="text-indigo-600 hover:underline flex items-center">
+                            查看原文 <i class="fa-solid fa-arrow-up-right-from-square ml-1 text-[10px]"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 新聞 8: 各國法規與稅則 (印度棉花免稅) -->
+            <div class="news-card bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden" data-category="law-tariff">
+                <div class="p-5">
+                    <div class="flex justify-between items-start mb-3">
+                        <span class="bg-red-50 text-red-700 text-xs font-bold px-2.5 py-1 rounded">關稅豁免</span>
+                        <span class="text-[11px] text-slate-400 font-mono">15小時前 (昨日 15:00)</span>
+                    </div>
+                    <h3 class="text-sm font-bold text-slate-900 mb-2 leading-snug hover:text-indigo-600 cursor-pointer">
+                        【稅則】救市重手！印度政府宣布自 6 月 1 日至 10 月 31 日，完全免除進口棉花海關關稅
+                    </h3>
+                    <p class="text-xs text-slate-600 mb-4 leading-relaxed">
+                        為降低印度成衣及機能面料廠的原料成本壓力，印度財政部發布最新 Gazette 公告，在今年 6 月 1 日至 10 月 31 日期間進口的棉花關稅完全豁免。業界預期此舉將大幅吸引國際美棉、西非棉流入南亞，並對全球中游混紡化纖原料與純棉紗市場產生重大結構性震盪。
+                    </p>
+                    <div class="flex justify-between items-center text-[11px] text-slate-500 border-t border-slate-100 pt-3">
+                        <span>來源: <strong class="text-slate-700">Fibre2Fashion</strong></span>
+                        <a href="https://www.fibre2fashion.com/news/cotton-news/india-exempts-customs-duties-on-cotton-imports-from-jun-1-to-oct-31-310663-newsdetails.htm" target="_blank" class="text-indigo-600 hover:underline flex items-center">
+                            查看原文 <i class="fa-solid fa-arrow-up-right-from-square ml-1 text-[10px]"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 新聞 9: 製程技術與設備 (Denovia回收) -->
+            <div class="news-card bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden" data-category="tech-equip">
+                <div class="p-5">
+                    <div class="flex justify-between items-start mb-3">
+                        <span class="bg-emerald-50 text-emerald-700 text-xs font-bold px-2.5 py-1 rounded">製程技術與設備</span>
+                        <span class="text-[11px] text-slate-400 font-mono">18小時前 (昨日 12:00)</span>
+                    </div>
+                    <h3 class="text-sm font-bold text-slate-900 mb-2 leading-snug hover:text-indigo-600 cursor-pointer">
+                        【回收】加拿大 Denovia 化學回收技術 "The Ark" 啟動商業化量產部署，混紡聚酯面料成功還原達 98.3% 高純度單體
+                    </h3>
+                    <p class="text-xs text-slate-600 mb-4 leading-relaxed">
+                        Denovia 宣布其位於溫哥華的貨櫃式解聚示範單元 "The Ark" 邁入下一階段商業量產部署。最新第三方獨立認證指出，該化學回收平台能在低溫低壓環境下，將含有大量 PU 與雜質的複合混紡廢舊紡織品快速降解，並取得結晶度達 98.3% 的超純度對苯二甲酸，打破物理回收極限。
+                    </p>
+                    <div class="flex justify-between items-center text-[11px] text-slate-500 border-t border-slate-100 pt-3">
+                        <span>來源: <strong class="text-slate-700">Textile World</strong></span>
+                        <a href="https://www.textileworld.com/textile-world/fiber-world/2026/06/denovia-advances-the-ark-from-launch-to-commercial-scale-up-targeting-the-trillion-dollar-plastic-and-textile-waste-opportunity/" target="_blank" class="text-indigo-600 hover:underline flex items-center">
+                            查看原文 <i class="fa-solid fa-arrow-up-right-from-square ml-1 text-[10px]"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 新聞 10: 品牌動態與零售 (Gap 財報逆襲) -->
+            <div class="news-card bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden" data-category="brand-retail">
+                <div class="p-5">
+                    <div class="flex justify-between items-start mb-3">
+                        <span class="bg-indigo-50 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded">品牌財報</span>
                         <span class="text-[11px] text-slate-400 font-mono">23小時前 (昨日 07:00)</span>
                     </div>
                     <h3 class="text-sm font-bold text-slate-900 mb-2 leading-snug hover:text-indigo-600 cursor-pointer">
-                        【政經】中國《供應鏈安全法》正式實施，台廠跨國品牌代工鏈夾縫求生
+                        【財報】經典丹寧與零售復甦！美式服飾龍頭 Gap 集團 Q1 2026 淨收入狂飆 75%
                     </h3>
                     <p class="text-xs text-slate-600 mb-4 leading-relaxed">
-                        中國全新供應鏈安全法生效，無任何過渡期。該法規定品牌若在中國境內進行涉及碳足跡、反強迫勞動等深入盡職調查，可能面臨當地安全審查，台商成衣與布料代工龍頭正評估將敏感審計工作移往東南亞廠區。
+                        Gap 集團公布最新 Q1 2026 財報，其季度淨利潤錄得 3.39 億美元，較上年同期的 1.93 億美元增長 75%，大幅超出華爾街普遍預期。得益於旗下 Old Navy 單季創下 20 億美元營收，以及 Gap 品牌核心經典丹寧系列（Denim）在行銷去庫存及快速補單上取得極佳平衡，帶動集團利潤率顯著回升。
                     </p>
                     <div class="flex justify-between items-center text-[11px] text-slate-500 border-t border-slate-100 pt-3">
-                        <span>來源: <strong class="text-slate-700">Morgan Lewis 摩根路易斯</strong></span>
-                        <a href="https://www.morganlewis.com/news/2026/05/china-law-puts-fashion-brands-in-compliance-bind" target="_blank" class="text-indigo-600 hover:underline flex items-center">
-                            法律解讀 <i class="fa-solid fa-arrow-up-right-from-square ml-1 text-[10px]"></i>
+                        <span>來源: <strong class="text-slate-700">EcoTextile News</strong></span>
+                        <a href="https://muckrack.com/media-outlet/ecotextile" target="_blank" class="text-indigo-600 hover:underline flex items-center">
+                            查看原文 <i class="fa-solid fa-arrow-up-right-from-square ml-1 text-[10px]"></i>
                         </a>
                     </div>
                 </div>
@@ -385,7 +382,7 @@
 
     <!-- 腳本區：Chart.js 的渲染與邏輯 -->
     <script>
-        // 1. 初始化走勢圖數據 (新增倫敦 Brent 原油數據組)
+        // 1. 初始化走勢圖數據 (含倫敦 Brent 原油數據組)
         const chartDataSets = {
             wti: {
                 label: '紐約 WTI 原油 (USD/桶)',
