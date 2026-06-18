@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>紡織化纖產業動態日報</title>
+    <title>紡織化纖產業動態日報 - 24H即時決策看板</title>
     <!-- 引入 Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- 引入 FontAwesome 圖標 -->
@@ -23,7 +23,7 @@
 <body class="bg-slate-50 text-slate-800 font-sans leading-normal tracking-normal">
 
     <!-- 頂部導航 -->
-    <header class="bg-indigo-955 bg-indigo-950 text-white sticky top-0 z-50 shadow-md">
+    <header class="bg-indigo-950 text-white sticky top-0 z-50 shadow-md">
         <div class="container mx-auto px-4 py-3.5 flex flex-wrap justify-between items-center">
             <div class="flex items-center space-x-3">
                 <i class="fa-solid fa-arrows-spin text-2xl text-emerald-400 animate-spin"></i>
@@ -43,13 +43,57 @@
         </div>
     </header>
 
+    <!-- 即時原料行情看板 -->
+    <section class="bg-slate-900 text-white border-b border-indigo-950 py-3 overflow-x-auto">
+        <div class="container mx-auto px-4 flex space-x-6 min-w-max text-xs font-mono items-center">
+            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center">
+                <i class="fa-solid fa-chart-line text-emerald-400 mr-2"></i>即時行情：
+            </span>
+            <div class="flex items-center space-x-1">
+                <span>WTI原油:</span>
+                <span class="text-slate-200">76.05 美元/桶</span>
+                <span class="text-red-400 text-xs"><i class="fa-solid fa-caret-down"></i> 5.82%</span>
+            </div>
+            <span class="text-slate-600">|</span>
+            <div class="flex items-center space-x-1">
+                <span>Brent原油:</span>
+                <span class="text-slate-200">78.96 美元/桶</span>
+                <span class="text-red-400 text-xs"><i class="fa-solid fa-caret-down"></i> 5.06%</span>
+            </div>
+            <span class="text-slate-600">|</span>
+            <div class="flex items-center space-x-1">
+                <span>華東 PTA:</span>
+                <span class="text-slate-200">6,110 人民幣/噸</span>
+                <span class="text-red-400 text-xs"><i class="fa-solid fa-caret-down"></i> 3.02%</span>
+            </div>
+            <span class="text-slate-600">|</span>
+            <div class="flex items-center space-x-1">
+                <span>MEG 內盤:</span>
+                <span class="text-slate-200">4,410 人民幣/噸</span>
+                <span class="text-red-400 text-xs"><i class="fa-solid fa-caret-down"></i> -44</span>
+            </div>
+            <span class="text-slate-600">|</span>
+            <div class="flex items-center space-x-1">
+                <span>氨綸 40D:</span>
+                <span class="text-slate-200">29,500 人民幣/噸</span>
+                <span class="text-slate-400 text-xs">持平</span>
+            </div>
+            <span class="text-slate-600">|</span>
+            <div class="flex items-center space-x-1">
+                <span>普梳棉紗 32S:</span>
+                <span class="text-slate-200">23,800 人民幣/噸</span>
+                <span class="text-slate-400 text-xs">持平</span>
+            </div>
+        </div>
+    </section>
+
     <!-- 原料價格歷史圖表區塊 -->
     <section class="container mx-auto px-4 py-6">
         <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
                 <div>
                     <h2 class="text-lg font-bold text-slate-900 flex items-center">
-                        <i class="fa-solid fa-chart-line text-indigo-600 mr-2"></i> 原料每天歷史走勢圖 (近7天)
+                        <i class="fa-solid fa-chart-line text-indigo-600 mr-2"></i> 關鍵原料日級歷史走勢圖 (近7天)
                     </h2>
                     <p class="text-xs text-slate-500 mt-1">追蹤全球化纖與能源基準每日收盤價變動</p>
                 </div>
@@ -58,6 +102,7 @@
                     <label for="materialSelector" class="text-xs font-bold text-slate-600 mr-2">選擇原料種類:</label>
                     <select id="materialSelector" onchange="updateChartData()" class="bg-slate-100 border border-slate-300 text-slate-700 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 p-2 font-semibold">
                         <option value="wti">紐約 WTI 原油 (USD/桶)</option>
+                        <option value="brent">倫敦 Brent 原油 (USD/桶)</option>
                         <option value="pta">華東 PTA 現貨 (RMB/噸)</option>
                         <option value="meg">乙二醇 MEG 內盤 (RMB/噸)</option>
                         <option value="poy">滌綸長絲 POY 150D (RMB/噸)</option>
@@ -122,8 +167,8 @@
                     </p>
                     <div class="flex justify-between items-center text-[11px] text-slate-500 border-t border-slate-100 pt-3">
                         <span>來源: <strong class="text-slate-700">卓創資訊 / 生意社</strong></span>
-                        <a href="http://trm.sci99.com/chain/chemical_fiber" target="_blank" class="text-indigo-600 hover:underline">
-                            查看數據 <i class="fa-solid fa-arrow-up-right-from-square ml-0.5 text-[9px]"></i>
+                        <a href="https://trm.sci99.com/chain/chemical_fiber" target="_blank" class="text-indigo-600 hover:underline flex items-center">
+                            查看原文 <i class="fa-solid fa-arrow-up-right-from-square ml-1 text-[10px]"></i>
                         </a>
                     </div>
                 </div>
@@ -144,8 +189,8 @@
                     </p>
                     <div class="flex justify-between items-center text-[11px] text-slate-500 border-t border-slate-100 pt-3">
                         <span>來源: <strong class="text-slate-700">SGS DPP專案組</strong></span>
-                        <a href="https://ticmall.sgs.com/tc/blog_details/sl-knowledge-sharing-unlocking-the-future-of-sustainable-textiles-embracing-the-digital-product-passport-dpp" target="_blank" class="text-indigo-600 hover:underline">
-                            查看原文 <i class="fa-solid fa-arrow-up-right-from-square ml-0.5 text-[9px]"></i>
+                        <a href="https://ticmall.sgs.com/tc/blog_details/sl-knowledge-sharing-unlocking-the-future-of-sustainable-textiles-embracing-the-digital-product-passport-dpp" target="_blank" class="text-indigo-600 hover:underline flex items-center">
+                            查看原文 <i class="fa-solid fa-arrow-up-right-from-square ml-1 text-[10px]"></i>
                         </a>
                     </div>
                 </div>
@@ -166,8 +211,8 @@
                     </p>
                     <div class="flex justify-between items-center text-[11px] text-slate-500 border-t border-slate-100 pt-3">
                         <span>來源: <strong class="text-slate-700">Textile World</strong></span>
-                        <a href="https://www.textileworld.com/category/textile-world/breaking-news/" target="_blank" class="text-indigo-600 hover:underline">
-                            查看原文 <i class="fa-solid fa-arrow-up-right-from-square ml-0.5 text-[9px]"></i>
+                        <a href="https://www.textileworld.com/textile-world/fiber-world/2026/06/denovia-advances-the-ark-from-launch-to-commercial-scale-up-targeting-the-trillion-dollar-plastic-and-textile-waste-opportunity/" target="_blank" class="text-indigo-600 hover:underline flex items-center">
+                            查看原文 <i class="fa-solid fa-arrow-up-right-from-square ml-1 text-[10px]"></i>
                         </a>
                     </div>
                 </div>
@@ -188,8 +233,8 @@
                     </p>
                     <div class="flex justify-between items-center text-[11px] text-slate-500 border-t border-slate-100 pt-3">
                         <span>來源: <strong class="text-slate-700">錢清原料城 / 卓創</strong></span>
-                        <a href="http://www.tbs-china.com/Hangqing/index.html" target="_blank" class="text-indigo-600 hover:underline">
-                            查看行情 <i class="fa-solid fa-arrow-up-right-from-square ml-0.5 text-[9px]"></i>
+                        <a href="http://www.tbs-china.com/Hangqing/index.html" target="_blank" class="text-indigo-600 hover:underline flex items-center">
+                            查看行情 <i class="fa-solid fa-arrow-up-right-from-square ml-1 text-[10px]"></i>
                         </a>
                     </div>
                 </div>
@@ -210,8 +255,8 @@
                     </p>
                     <div class="flex justify-between items-center text-[11px] text-slate-500 border-t border-slate-100 pt-3">
                         <span>來源: <strong class="text-slate-700">台灣紡織推動計畫</strong></span>
-                        <a href="https://www.textilesinfo.tw/mod/news/index.php" target="_blank" class="text-indigo-600 hover:underline">
-                            查看原文 <i class="fa-solid fa-arrow-up-right-from-square ml-0.5 text-[9px]"></i>
+                        <a href="https://www.textilesinfo.tw/mod/news/index.php?REQUEST_ID=75d9f35204bd83598ebc3de0e835f5a541cae8a1cacf6685e50241eeead4e32f" target="_blank" class="text-indigo-600 hover:underline flex items-center">
+                            查看原文 <i class="fa-solid fa-arrow-up-right-from-square ml-1 text-[10px]"></i>
                         </a>
                     </div>
                 </div>
@@ -232,7 +277,9 @@
                     </p>
                     <div class="flex justify-between items-center text-[11px] text-slate-500 border-t border-slate-100 pt-3">
                         <span>來源: <strong class="text-slate-700">ISPO / 紡拓會</strong></span>
-                        <span class="text-slate-400">趨勢快訊</span>
+                        <a href="https://ws.ndc.gov.tw/001/administrator/18/relfile/6037/9877/5f021be6-7c78-489c-ac89-d9f85318754a.pdf" target="_blank" class="text-indigo-600 hover:underline flex items-center">
+                            查看趨勢報告 <i class="fa-solid fa-arrow-up-right-from-square ml-1 text-[10px]"></i>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -252,8 +299,8 @@
                     </p>
                     <div class="flex justify-between items-center text-[11px] text-slate-500 border-t border-slate-100 pt-3">
                         <span>來源: <strong class="text-slate-700">Fibre2Fashion</strong></span>
-                        <a href="https://www.fibre2fashion.com" target="_blank" class="text-indigo-600 hover:underline">
-                            查看原文 <i class="fa-solid fa-arrow-up-right-from-square ml-0.5 text-[9px]"></i>
+                        <a href="https://www.fibre2fashion.com/news/cotton-news/india-exempts-customs-duties-on-cotton-imports-from-jun-1-to-oct-31-310663-newsdetails.htm" target="_blank" class="text-indigo-600 hover:underline flex items-center">
+                            查看原文 <i class="fa-solid fa-arrow-up-right-from-square ml-1 text-[10px]"></i>
                         </a>
                     </div>
                 </div>
@@ -267,14 +314,16 @@
                         <span class="text-[11px] text-slate-400 font-mono">18小時前 (昨日 12:00)</span>
                     </div>
                     <h3 class="text-sm font-bold text-slate-900 mb-2 leading-snug hover:text-indigo-600 cursor-pointer">
-                        【設備】義大利 ITM 展出全新「AI自動化智慧驗布與裁剪系統」，效率提升35%
+                        【設備】BB Engineering 於 ITM 2026 展出全新專利 Valuepack 雙級過濾紡絲箱
                     </h3>
                     <p class="text-xs text-slate-600 mb-4 leading-relaxed">
-                        新型高精度智慧驗布設備正式亮相。該設備利用邊緣運算與工業相機，能在高速織造過程中即時檢測彈性紗跳絲、破洞等微小瑕疵，並與下游客戶的數位裁床數據對接，自動進行排料避瑕，幫助織造廠節省3成廢布。
+                        德國 BB Engineering 於 ITM 2026 展會中推出專利 Valuepack 紡絲箱，首創結合「金屬沙」與「過濾燭」雙級過濾工藝。該技術優化了熔體溫度與粘度均勻性，大幅提升再生切片紡絲性能及紗線品質。
                     </p>
                     <div class="flex justify-between items-center text-[11px] text-slate-500 border-t border-slate-100 pt-3">
-                        <span>來源: <strong class="text-slate-700">ITMA Breaking News</strong></span>
-                        <span class="text-slate-400">設備簡報</span>
+                        <span>來源: <strong class="text-slate-700">Textile World</strong></span>
+                        <a href="https://www.textileworld.com/textile-world/2026/05/bb-engineering-unveils-new-patented-valuepack-spin-pack-at-itm-2026/" target="_blank" class="text-indigo-600 hover:underline flex items-center">
+                            查看原文 <i class="fa-solid fa-arrow-up-right-from-square ml-1 text-[10px]"></i>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -287,15 +336,15 @@
                         <span class="text-[11px] text-slate-400 font-mono">20小時前 (昨日 10:00)</span>
                     </div>
                     <h3 class="text-sm font-bold text-slate-900 mb-2 leading-snug hover:text-indigo-600 cursor-pointer">
-                        【織物】科技用布大突破：防靜電、耐腐蝕之「高強防護連續長絲紗線」獲大廠認證
+                        【織物】PureCycle 泰國 PP 回收廠獲 FastPass 投資加速許可，切入機能與科技用布鏈
                     </h3>
                     <p class="text-xs text-slate-600 mb-4 leading-relaxed">
-                        PureCycle 泰國子公司成功與工業織物巨頭合作，將超純再生PP長絲應用於工業級耐酸鹼防護服、以及高科技電子廠防靜電無塵室家飾布與遮光布中，此環保再生紗線已通過半導體潔淨度 Class 100 標準。
+                        PureCycle 泰國子公司獲泰國投資委員會（BOI）批准，納入 FastPass 投資加速計劃。該雷勇府項目生產的超純回收 PP 將用於製造 100% 可回收連續長絲，廣泛應用於成衣、汽車及科技防護用布。
                     </p>
                     <div class="flex justify-between items-center text-[11px] text-slate-500 border-t border-slate-100 pt-3">
                         <span>來源: <strong class="text-slate-700">EcoTextile News</strong></span>
-                        <a href="https://muckrack.com/media-outlet/ecotextile" target="_blank" class="text-indigo-600 hover:underline">
-                            查看原文 <i class="fa-solid fa-arrow-up-right-from-square ml-0.5 text-[9px]"></i>
+                        <a href="https://muckrack.com/media-outlet/ecotextile" target="_blank" class="text-indigo-600 hover:underline flex items-center">
+                            查看原文 <i class="fa-solid fa-arrow-up-right-from-square ml-1 text-[10px]"></i>
                         </a>
                     </div>
                 </div>
@@ -316,8 +365,8 @@
                     </p>
                     <div class="flex justify-between items-center text-[11px] text-slate-500 border-t border-slate-100 pt-3">
                         <span>來源: <strong class="text-slate-700">Morgan Lewis 摩根路易斯</strong></span>
-                        <a href="https://www.morganlewis.com/news/2026/05/china-law-puts-fashion-brands-in-compliance-bind" target="_blank" class="text-indigo-600 hover:underline">
-                            法律解讀 <i class="fa-solid fa-arrow-up-right-from-square ml-0.5 text-[9px]"></i>
+                        <a href="https://www.morganlewis.com/news/2026/05/china-law-puts-fashion-brands-in-compliance-bind" target="_blank" class="text-indigo-600 hover:underline flex items-center">
+                            法律解讀 <i class="fa-solid fa-arrow-up-right-from-square ml-1 text-[10px]"></i>
                         </a>
                     </div>
                 </div>
@@ -329,20 +378,26 @@
     <!-- 頁尾 -->
     <footer class="bg-slate-900 text-slate-400 py-8 border-t border-slate-800 text-center text-xs">
         <div class="container mx-auto px-4">
-            <p class="mb-2">紡織化纖產業日報© 2026. All Rights Reserved.</p>
-            <p class="max-w-xl mx-auto leading-relaxed text-slate-500">本系統每3小時自動執行更新情報。</p>
+            <p class="mb-2">紡織化纖產業日報 © 2026. All Rights Reserved.</p>
+            <p class="max-w-xl mx-auto leading-relaxed text-slate-500">本系統每3小時自動更新情報。</p>
         </div>
     </footer>
 
     <!-- 腳本區：Chart.js 的渲染與邏輯 -->
     <script>
-        // 1. 初始化走勢圖數據
+        // 1. 初始化走勢圖數據 (新增倫敦 Brent 原油數據組)
         const chartDataSets = {
             wti: {
                 label: '紐約 WTI 原油 (USD/桶)',
                 borderColor: '#ef4444',
                 backgroundColor: 'rgba(239, 68, 68, 0.1)',
                 data: [80.12, 79.45, 78.90, 77.20, 76.50, 76.05]
+            },
+            brent: {
+                label: '倫敦 Brent 原油 (USD/桶)',
+                borderColor: '#f43f5e',
+                backgroundColor: 'rgba(244, 63, 94, 0.1)',
+                data: [83.45, 82.80, 81.95, 80.40, 79.50, 78.96]
             },
             pta: {
                 label: '華東 PTA 現貨 (RMB/噸)',
