@@ -1,651 +1,626 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>紡織化纖產業動態日報 - 24H即時決策看板</title>
-    <!-- 引入 Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- 引入 FontAwesome 圖標 -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- 引入 Chart.js 用於繪製歷史價格圖表 -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        .news-card {
-            transition: all 0.2s ease-in-out;
-        }
-        .news-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px -3px rgba(0, 0, 0, 0.1);
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>全球紡織化纖決策日報 - 24H 實時智能決策看板</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+.news-card {
+transition: all 0.2s ease-in-out;
+}
+.news-card:hover {
+transform: translateY(-2px);
+box-shadow: 0 10px 20px -3px rgba(0, 0, 0, 0.1);
+}
+</style>
 </head>
 <body class="bg-slate-50 text-slate-800 font-sans leading-normal tracking-normal">
 
-    <!-- 頂部導航 -->
-    <header class="bg-indigo-950 text-white sticky top-0 z-50 shadow-md">
-        <div class="container mx-auto px-4 py-3.5 flex flex-wrap justify-between items-center">
-            <div class="flex items-center space-x-3">
-                <i class="fa-solid fa-arrows-spin text-2xl text-emerald-400 animate-spin"></i>
-                <div>
-                    <h1 class="text-xl font-bold tracking-wider">紡織化纖產業日報</h1>
-                    <p class="text-xs text-indigo-200">24H 滾動更新 • 每日 06:00 準時發布</p>
-                </div>
-            </div>
-            <div class="flex items-center space-x-4 mt-2 sm:mt-0">
-                <span class="bg-indigo-800 px-3 py-1.5 rounded-full text-xs text-emerald-300 font-mono">
-                    <i class="fa-regular fa-clock mr-1"></i>2026-06-18 06:00 TST
-                </span>
-                <button onclick="copyShareLink()" class="bg-emerald-500 hover:bg-emerald-600 text-white px-3.5 py-1.5 rounded-lg text-xs font-semibold flex items-center transition duration-150">
-                    <i class="fa-solid fa-share-nodes mr-1"></i> 分享日報網址
-                </button>
-            </div>
-        </div>
-    </header>
+<header class="bg-slate-950 text-white sticky top-0 z-50 shadow-md">
+<div class="container mx-auto px-4 py-3.5 flex flex-wrap justify-between items-center">
+<div class="flex items-center space-x-3">
+<i class="fa-solid fa-arrows-spin text-2xl text-emerald-400 animate-spin"></i>
+<div>
+<h1 class="text-xl font-bold tracking-wider">全球紡織化纖決策日報</h1>
+<p class="text-xs text-indigo-200">24H 滾動更新 • 每日 07:00 準時發布</p>
+</div>
+</div>
+<div class="flex items-center space-x-4 mt-2 sm:mt-0">
+<span class="bg-slate-800 px-3 py-1.5 rounded-full text-xs text-emerald-300 font-mono">
+<i class="fa-regular fa-clock mr-1"></i>2026-06-18 07:00 TST
+</span>
+<button onclick="copyShareLink()" class="bg-emerald-500 hover:bg-emerald-600 text-white px-3.5 py-1.5 rounded-lg text-xs font-semibold flex items-center transition duration-150">
+<i class="fa-solid fa-share-nodes mr-1"></i> 分享決策看板
+</button>
+</div>
+</div>
+</header>
 
-    <!-- 即時原料行情看板 -->
-    <section class="bg-slate-900 text-white border-b border-indigo-950 py-3 overflow-x-auto">
-        <div class="container mx-auto px-4 flex space-x-6 min-w-max text-xs font-mono items-center">
-            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center">
-                <i class="fa-solid fa-chart-line text-emerald-400 mr-2"></i>即時行情：
-            </span>
-            <div class="flex items-center space-x-1">
-                <span>WTI原油:</span>
-                <span class="text-slate-200">76.05 美元/桶</span>
-                <span class="text-red-400 text-xs"><i class="fa-solid fa-caret-down"></i> 5.82%</span>
-            </div>
-            <span class="text-slate-600">|</span>
-            <div class="flex items-center space-x-1">
-                <span>Brent原油:</span>
-                <span class="text-slate-200">78.96 美元/桶</span>
-                <span class="text-red-400 text-xs"><i class="fa-solid fa-caret-down"></i> 5.06%</span>
-            </div>
-            <span class="text-slate-600">|</span>
-            <div class="flex items-center space-x-1">
-                <span>華東 PTA:</span>
-                <span class="text-slate-200">6,110 人民幣/噸</span>
-                <span class="text-red-400 text-xs"><i class="fa-solid fa-caret-down"></i> 3.02%</span>
-            </div>
-            <span class="text-slate-600">|</span>
-            <div class="flex items-center space-x-1">
-                <span>MEG 內盤:</span>
-                <span class="text-slate-200">4,410 人民幣/噸</span>
-                <span class="text-red-400 text-xs"><i class="fa-solid fa-caret-down"></i> -44</span>
-            </div>
-            <span class="text-slate-600">|</span>
-            <div class="flex items-center space-x-1">
-                <span>氨綸 40D:</span>
-                <span class="text-slate-200">29,500 人民幣/噸</span>
-                <span class="text-slate-400 text-xs">持平</span>
-            </div>
-            <span class="text-slate-600">|</span>
-            <div class="flex items-center space-x-1">
-                <span>普梳棉紗 32S:</span>
-                <span class="text-slate-200">23,800 人民幣/噸</span>
-                <span class="text-slate-400 text-xs">持平</span>
-            </div>
-        </div>
-    </section>
+<section class="bg-slate-900 text-white border-b border-indigo-950 py-3 overflow-x-auto">
+<div class="container mx-auto px-4 flex space-x-6 min-w-max text-xs font-mono items-center">
+<span class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center">
+<i class="fa-solid fa-chart-line text-emerald-400 mr-2"></i>即時能化與棉花行情：
+</span>
+<div class="flex items-center space-x-1">
+<span>WTI原油(美國 US):</span>
+<span class="text-emerald-300">74.35 美元/桶</span>
+<span class="text-red-400 text-xs"><i class="fa-solid fa-caret-down"></i> 3.18%</span>
+</div>
+<span class="text-slate-700">/</span>
+<div class="flex items-center space-x-1">
+<span>Brent原油(英國 UK):</span>
+<span class="text-emerald-300">77.24 美元/桶</span>
+<span class="text-red-400 text-xs"><i class="fa-solid fa-caret-down"></i> 2.90%</span>
+</div>
+<span class="text-slate-700">/</span>
+<div class="flex items-center space-x-1">
+<span>華東 PTA(中國 CN):</span>
+<span class="text-emerald-300">5,980 人民幣/噸</span>
+<span class="text-red-400 text-xs"><i class="fa-solid fa-caret-down"></i> 1.03%</span>
+</div>
+<span class="text-slate-700">/</span>
+<div class="flex items-center space-x-1">
+<span>MEG 內盤(中國 CN):</span>
+<span class="text-emerald-300">4,380 人民幣/噸</span>
+<span class="text-emerald-400 text-xs"><i class="fa-solid fa-caret-up"></i> 0.33%</span>
+</div>
+<span class="text-slate-700">/</span>
+<div class="flex items-center space-x-1">
+<span>ICE 美棉(美國 US):</span>
+<span class="text-emerald-300">76.20 美分/磅</span>
+<span class="text-emerald-400 text-xs"><i class="fa-solid fa-caret-up"></i> 0.52%</span>
+</div>
+<span class="text-slate-700">/</span>
+<div class="flex items-center space-x-1">
+<span>中國棉花 3128B:</span>
+<span class="text-emerald-300">17,400 人民幣/噸</span>
+<span class="text-slate-400 text-xs">持平</span>
+</div>
+</div>
+</section>
 
-    <!-- 原料價格歷史圖表區塊 -->
-    <section class="container mx-auto px-4 py-6">
-        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
-                <div>
-                    <h2 class="text-lg font-bold text-slate-900 flex items-center">
-                        <i class="fa-solid fa-chart-line text-indigo-600 mr-2"></i> 關鍵原料日級歷史走勢圖 (近7天)
-                    </h2>
-                    <p class="text-xs text-slate-500 mt-1">追蹤全球化纖與能源基準每日收盤價變動</p>
-                </div>
-                <!-- 切換原物料下拉選單 -->
-                <div class="mt-4 md:mt-0">
-                    <label for="materialSelector" class="text-xs font-bold text-slate-600 mr-2">選擇原料種類:</label>
-                    <select id="materialSelector" onchange="updateChartData()" class="bg-slate-100 border border-slate-300 text-slate-700 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 p-2 font-semibold">
-                        <option value="wti">紐約 WTI 原油 (USD/桶)</option>
-                        <option value="brent">倫敦 Brent 原油 (USD/桶)</option>
-                        <option value="pta">華東 PTA 現貨 (RMB/噸)</option>
-                        <option value="meg">乙二醇 MEG 內盤 (RMB/噸)</option>
-                        <option value="poy">滌綸長絲 POY 150D (RMB/噸)</option>
-                        <option value="cotton">普梳棉紗 32S (RMB/噸)</option>
-                    </select>
-                </div>
-            </div>
-            <!-- 圖表容器 -->
-            <div class="relative h-72 md:h-96 w-full">
-                <canvas id="historyChart"></canvas>
-            </div>
-        </div>
-    </section>
+<section class="container mx-auto px-4 py-6">
+<div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
+<div>
+<h2 class="text-lg font-bold text-slate-900 flex items-center">
+<i class="fa-solid fa-chart-line text-indigo-600 mr-2"></i> 關鍵原料日級歷史走勢圖 (06-12 至 06-17)
+</h2>
+<p class="text-xs text-slate-500 mt-1">追蹤全球化纖與天然纖維基準每日收盤價變動 (美伊協議期盼、歐美減息與能化成本重組影響)</p>
+</div>
+<div class="mt-4 md:mt-0">
+<label for="materialSelector" class="text-xs font-bold text-slate-600 mr-2">選擇原料種類:</label>
+<select id="materialSelector" onchange="updateChartData()" class="bg-slate-100 border border-slate-300 text-slate-700 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 p-2 font-semibold">
+<option value="wti">紐約 WTI 原油 (USD/桶)</option>
+<option value="brent">倫敦 Brent 原油 (USD/桶)</option>
+<option value="pta">華東 PTA 現貨 (RMB/噸)</option>
+<option value="meg">乙二醇 MEG 內盤 (RMB/噸)</option>
+<option value="cotton">美棉 ICE 12月合約 (USDc/磅)</option>
+</select>
+</div>
+</div>
+<div class="relative h-72 md:h-96 w-full">
+<canvas id="historyChart"></canvas>
+</div>
+</div>
+</section>
 
-    <!-- 篩選與搜尋欄 -->
-    <main class="container mx-auto px-4 py-2 pb-12">
-        <div class="flex flex-col lg:flex-row lg:items-center justify-between mb-8 space-y-4 lg:space-y-0">
-            <!-- 產業主題分類過濾 -->
-            <div class="flex space-x-1.5 overflow-x-auto pb-2 lg:pb-0" id="category-tabs">
-                <button onclick="filterCategory('all')" class="cat-btn px-3.5 py-2 rounded-lg text-xs font-bold transition duration-150 bg-indigo-600 text-white shadow" data-target="all">
-                    全部資訊
-                </button>
-                <button onclick="filterCategory('brand-retail')" class="cat-btn px-3.5 py-2 rounded-lg text-xs font-bold transition duration-150 bg-white text-slate-600 hover:bg-slate-100 border border-slate-200" data-target="brand-retail">
-                    品牌動態與零售
-                </button>
-                <button onclick="filterCategory('law-tariff')" class="cat-btn px-3.5 py-2 rounded-lg text-xs font-bold transition duration-150 bg-white text-slate-600 hover:bg-slate-100 border border-slate-200" data-target="law-tariff">
-                    各國法規與稅則
-                </button>
-                <button onclick="filterCategory('intl-politics')" class="cat-btn px-3.5 py-2 rounded-lg text-xs font-bold transition duration-150 bg-white text-slate-600 hover:bg-slate-100 border border-slate-200" data-target="intl-politics">
-                    國際地緣與情勢
-                </button>
-                <button onclick="filterCategory('tech-equip')" class="cat-btn px-3.5 py-2 rounded-lg text-xs font-bold transition duration-150 bg-white text-slate-600 hover:bg-slate-100 border border-slate-200" data-target="tech-equip">
-                    製程技術與設備
-                </button>
-            </div>
+<main class="container mx-auto px-4 py-2 pb-12">
+<div class="flex flex-col lg:flex-row lg:items-center justify-between mb-8 space-y-4 lg:space-y-0">
+<div class="flex space-x-1.5 overflow-x-auto pb-2 lg:pb-0" id="category-tabs">
+<button onclick="filterCategory('all')" class="cat-btn px-3.5 py-2 rounded-lg text-xs font-bold transition duration-150 bg-indigo-600 text-white shadow" data-target="all">
+全部資訊
+</button>
+<button onclick="filterCategory('brand-retail')" class="cat-btn px-3.5 py-2 rounded-lg text-xs font-bold transition duration-150 bg-white text-slate-600 hover:bg-slate-100 border border-slate-200" data-target="brand-retail">
+品牌策略與零售動態
+</button>
+<button onclick="filterCategory('law-tariff')" class="cat-btn px-3.5 py-2 rounded-lg text-xs font-bold transition duration-150 bg-white text-slate-600 hover:bg-slate-100 border border-slate-200" data-target="law-tariff">
+各國法規與稅則壁壘
+</button>
+<button onclick="filterCategory('intl-politics')" class="cat-btn px-3.5 py-2 rounded-lg text-xs font-bold transition duration-150 bg-white text-slate-600 hover:bg-slate-100 border border-slate-200" data-target="intl-politics">
+國際地緣與採購情勢
+</button>
+<button onclick="filterCategory('tech-equip')" class="cat-btn px-3.5 py-2 rounded-lg text-xs font-bold transition duration-150 bg-white text-slate-600 hover:bg-slate-100 border border-slate-200" data-target="tech-equip">
+製程技術與設備創新
+</button>
+</div>
 
-            <!-- 即時搜尋 -->
-            <div class="relative w-full lg:w-80">
-                <input type="text" id="search-input" onkeyup="searchNews()" placeholder="搜尋品牌、原物料、法規、布種、台廠..." class="w-full pl-10 pr-4 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-xs">
-                <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-slate-400 text-xs"></i>
-            </div>
-        </div>
+<div class="relative w-full lg:w-80">
+<input type="text" id="search-input" onkeyup="searchNews()" placeholder="搜尋品牌、原料、法規、設備、台廠..." class="w-full pl-10 pr-4 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-xs">
+<i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-slate-400 text-xs"></i>
+</div>
+</div>
 
-        <!-- 訊息展示區 (24H新聞列表) -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="news-container">
-            
-            <!-- 新聞 1: 各國法規與稅則 (中國供應鏈法) -->
-            <div class="news-card bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden" data-category="law-tariff">
-                <div class="p-5">
-                    <div class="flex justify-between items-start mb-3">
-                        <span class="bg-red-50 text-red-700 text-xs font-bold px-2.5 py-1 rounded">法規與合規</span>
-                        <span class="text-[11px] text-slate-400 font-mono">1小時前</span>
-                    </div>
-                    <h3 class="text-sm font-bold text-slate-900 mb-2 leading-snug hover:text-indigo-600 cursor-pointer">
-                        【法規】中國《供應鏈安全法》正式實施，跨國時裝品牌對華常規 ESG 審計面臨合規衝突
-                    </h3>
-                    <p class="text-xs text-slate-600 mb-4 leading-relaxed">
-                        中國全新《供應鏈安全法》已於 4 月 7 日無過渡期強制執行。新規實施後，跨國服裝品牌及代工廠在華進行的常規盡職調查與碳足跡審計將被擴大審查。法律專家示警，企業若為迎合歐美高透明度及反強迫勞動法規而搜集供應鏈數據，極易踩到中方法律紅線。
-                    </p>
-                    <div class="flex justify-between items-center text-[11px] text-slate-500 border-t border-slate-100 pt-3">
-                        <span>來源: <strong class="text-slate-700">Morgan Lewis 摩根路易斯</strong></span>
-                        <a href="https://www.morganlewis.com/news/2026/05/china-law-puts-fashion-brands-in-compliance-bind" target="_blank" class="text-indigo-600 hover:underline flex items-center">
-                            查看原文 <i class="fa-solid fa-arrow-up-right-from-square ml-1 text-[10px]"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="news-container">
 
-            <!-- 新聞 2: 各國法規與稅則 (印美關稅與GST) -->
-            <div class="news-card bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden" data-category="law-tariff">
-                <div class="p-5">
-                    <div class="flex justify-between items-start mb-3">
-                        <span class="bg-purple-50 text-purple-700 text-xs font-bold px-2.5 py-1 rounded">稅則變動</span>
-                        <span class="text-[11px] text-slate-400 font-mono">2小時前</span>
-                    </div>
-                    <h3 class="text-sm font-bold text-slate-900 mb-2 leading-snug hover:text-indigo-600 cursor-pointer">
-                        【稅則】印度 GST 2.0 新制登場！強力移除人造纖維與棉花稅率 inversion 痛點，全力抗衡美國 50% 高額關稅
-                    </h3>
-                    <p class="text-xs text-slate-600 mb-4 leading-relaxed">
-                        印度政府推動 GST 2.0 改革以協助成衣業降本。新政消除了化纖原料的「倒掛稅率（inversion）」並實現纖維中立，且將 5% 優惠稅率上限放寬至 2,500 盧比。然而，美國對印度商品實施高達 50% 的對等關稅，正嚴重威脅印度成衣在美出口競爭力。
-                    </p>
-                    <div class="flex justify-between items-center text-[11px] text-slate-500 border-t border-slate-100 pt-3">
-                        <span>來源: <strong class="text-slate-700">Fibre2Fashion</strong></span>
-                        <a href="https://www.fibre2fashion.com/news/textile-news/gst-2-0-boosts-textiles-but-us-tariff-poses-challenge-citi-ey-india-305548-newsdetails.htm" target="_blank" class="text-indigo-600 hover:underline flex items-center">
-                            查看原文 <i class="fa-solid fa-arrow-up-right-from-square ml-1 text-[10px]"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
+<div class="news-card bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden" data-category="law-tariff">
+<div class="p-5">
+<div class="flex justify-between items-start mb-3">
+<span class="bg-red-50 text-red-700 text-xs font-bold px-2.5 py-1 rounded">合規審查</span>
+<span class="text-[11px] text-slate-400 font-mono">1小時前</span>
+</div>
+<h3 class="text-sm font-bold text-slate-900 mb-2 leading-snug hover:text-indigo-600 cursor-pointer">
+【法規】中國《供應鏈安全法》強勢實施，跨國時裝品牌常規 ESG 與碳足跡審計面臨數據合規雙向衝突
+</h3>
+<p class="text-xs text-slate-600 mb-4 leading-relaxed">
+中國《供應鏈安全法》(China Supply Chain Security Law) 已無過渡期強制執行。新規要求所有在華開展的供應鏈調查與碳足跡審計需經國家安全審查。法律專家警告，若跨國時裝品牌為滿足歐美 ESG 與反強迫勞動規定而在華單方面搜集供應鏈溯源數據，極易違反中方法律，使代工廠與品牌陷入合規夾縫。
+</p>
+<div class="flex justify-between items-center text-[11px] text-slate-500 border-t border-slate-100 pt-3">
+<span>來源: <strong class="text-slate-700">Morgan Lewis 摩根路易斯 (美國 US)</strong></span>
+<a href="https://www.morganlewis.com/news/2026/05/china-law-puts-fashion-brands-in-compliance-bind" target="_blank" class="text-indigo-600 hover:underline flex items-center">
+查看原文 <i class="fa-solid fa-arrow-up-right-from-square ml-1 text-[10px]"></i>
+</a>
+</div>
+</div>
+</div>
 
-            <!-- 新聞 3: 品牌動態與零售 (Burberry 延期淨零) -->
-            <div class="news-card bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden" data-category="brand-retail">
-                <div class="p-5">
-                    <div class="flex justify-between items-start mb-3">
-                        <span class="bg-indigo-50 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded">品牌策略</span>
-                        <span class="text-[11px] text-slate-400 font-mono">3小時前</span>
-                    </div>
-                    <h3 class="text-sm font-bold text-slate-900 mb-2 leading-snug hover:text-indigo-600 cursor-pointer">
-                        【品牌】奢侈品牌氣候政策大退步？Burberry 宣佈推遲「淨零排放目標期限」10 年
-                    </h3>
-                    <p class="text-xs text-slate-600 mb-4 leading-relaxed">
-                        英國奢侈品牌大廠 Burberry 在其最新發布的氣候轉型策略中，將原定 2039/40 會計年度的「淨零碳排」承諾期限向後推遲 10 年，調整至 2049/50。Burberry 坦言，隨著對旗下長尾供應鏈、可追溯性與改用低碳能源製程的深度剖析，原定時程的商業成本代價已非當前市場環境能承擔。
-                    </p>
-                    <div class="flex justify-between items-center text-[11px] text-slate-500 border-t border-slate-100 pt-3">
-                        <span>來源: <strong class="text-slate-700">EcoTextile News</strong></span>
-                        <a href="https://muckrack.com/john-mowbray-1/articles" target="_blank" class="text-indigo-600 hover:underline flex items-center">
-                            查看驗證摘要 <i class="fa-solid fa-arrow-up-right-from-square ml-1 text-[10px]"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
+<div class="news-card bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden" data-category="law-tariff">
+<div class="p-5">
+<div class="flex justify-between items-start mb-3">
+<span class="bg-purple-50 text-purple-700 text-xs font-bold px-2.5 py-1 rounded">稅率改革</span>
+<span class="text-[11px] text-slate-400 font-mono">2小時前</span>
+</div>
+<h3 class="text-sm font-bold text-slate-900 mb-2 leading-snug hover:text-indigo-600 cursor-pointer">
+【稅則】印度 GST 2.0 新政強勢消除人造纖維與棉花稅率倒掛，全面迎戰美國 50% 高額反傾銷關稅
+</h3>
+<p class="text-xs text-slate-600 mb-4 leading-relaxed">
+印度 (India) 財政部推動商品與服務稅改革 (GST 2.0)，徹底解決了化纖與合成原料的「倒掛稅率」痛點，實現全纖維中立，並將 5% 優惠稅率上限放寬至 2,500 盧比。此舉旨在協助成衣業降本。然而，美國對印度商品實施的高達 50% 對等及反傾銷關稅，正大幅削弱南亞成衣在美出口競爭力。
+</p>
+<div class="flex justify-between items-center text-[11px] text-slate-500 border-t border-slate-100 pt-3">
+<span>來源: <strong class="text-slate-700">Fibre2Fashion (印度 India)</strong></span>
+<a href="https://www.fibre2fashion.com/news/textile-news/gst-2-0-boosts-textiles-but-us-tariff-poses-challenge-citi-ey-india-305548-newsdetails.htm" target="_blank" class="text-indigo-600 hover:underline flex items-center">
+查看原文 <i class="fa-solid fa-arrow-up-right-from-square ml-1 text-[10px]"></i>
+</a>
+</div>
+</div>
+</div>
 
-            <!-- 新聞 4: 品牌動態與零售 (Tapestry 獲AI專利) -->
-            <div class="news-card bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden" data-category="brand-retail">
-                <div class="p-5">
-                    <div class="flex justify-between items-start mb-3">
-                        <span class="bg-indigo-50 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded">零售科技</span>
-                        <span class="text-[11px] text-slate-400 font-mono">4小時前</span>
-                    </div>
-                    <h3 class="text-sm font-bold text-slate-900 mb-2 leading-snug hover:text-indigo-600 cursor-pointer">
-                        【品牌】輕奢巨頭 Tapestry 為其自主研發 AI 導購與趨勢預測平台 "Mira" 取得美國專利
-                    </h3>
-                    <p class="text-xs text-slate-600 mb-4 leading-relaxed">
-                        Coach 與 Kate Spade 的母公司 Tapestry 宣布，其內部研發的生成式 AI 平台 "Mira" 已成功榮獲美國專利。Mira 能夠在數秒內整合全球庫存數據、歷史銷售走勢與消費者在線搜尋偏好，協助設計與行銷團隊更早捕捉流行趨勢，優化庫存管理，並將產品上市天數縮短達數週。
-                    </p>
-                    <div class="flex justify-between items-center text-[11px] text-slate-500 border-t border-slate-100 pt-3">
-                        <span>來源: <strong class="text-slate-700">EcoTextile News</strong></span>
-                        <a href="https://muckrack.com/john-mowbray-1/articles" target="_blank" class="text-indigo-600 hover:underline flex items-center">
-                            查看原文存檔 <i class="fa-solid fa-arrow-up-right-from-square ml-1 text-[10px]"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
+<div class="news-card bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden" data-category="law-tariff">
+<div class="p-5">
+<div class="flex justify-between items-start mb-3">
+<span class="bg-red-50 text-red-700 text-xs font-bold px-2.5 py-1 rounded">關稅判定</span>
+<span class="text-[11px] text-slate-400 font-mono">3小時前</span>
+</div>
+<h3 class="text-sm font-bold text-slate-900 mb-2 leading-snug hover:text-indigo-600 cursor-pointer">
+【關稅】美國最高法院拒絕受理中國 301 關稅挑戰案司法覆審，對華高額懲罰性稅則壁壘正式常態化
+</h3>
+<p class="text-xs text-slate-600 mb-4 leading-relaxed">
+美國最高法院 (US Supreme Court) 正式拒絕了進口商團體針對「中國 Section 301 懲罰性關稅」提起的上訴與司法覆審。這項最終裁決確立了美國政府對自中國進口的各類紡織面料與原材料徵收高額 301 關稅的合法性，意味著跨國採購的關稅成本壁壘已正式常態化。
+</p>
+<div class="flex justify-between items-center text-[11px] text-slate-500 border-t border-slate-100 pt-3">
+<span>來源: <strong class="text-slate-700">Fibre2Fashion (美國 United States)</strong></span>
+<a href="https://www.fibre2fashion.com/news/textile-news/brexit-impact-wrose-than-expected-for-26-of-uk-mid-sized-firms-bdo-311045-newsdetails.htm" target="_blank" class="text-indigo-600 hover:underline flex items-center">
+查看原文 <i class="fa-solid fa-arrow-up-right-from-square ml-1 text-[10px]"></i>
+</a>
+</div>
+</div>
+</div>
 
-            <!-- 新聞 5: 品牌動態與零售 (Lycra 債務重組) -->
-            <div class="news-card bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden" data-category="brand-retail">
-                <div class="p-5">
-                    <div class="flex justify-between items-start mb-3">
-                        <span class="bg-indigo-50 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded">產業巨頭</span>
-                        <span class="text-[11px] text-slate-400 font-mono">5小時前</span>
-                    </div>
-                    <h3 class="text-sm font-bold text-slate-900 mb-2 leading-snug hover:text-indigo-600 cursor-pointer">
-                        【巨頭】彈性纖維霸主萊卡公司（The Lycra Company）正式走出美國 Chapter 11 破產保護，大舉削減 12 億美元債務
-                    </h3>
-                    <p class="text-xs text-slate-600 mb-4 leading-relaxed">
-                        彈性化纖巨頭 The Lycra Company 宣布完成法庭監督下的債務重組計畫，大舉砍掉逾 12 億美元的長期債務，成功走出破產保護程序。雖然資產負債表得以修復，但下游品牌採購與代工廠正密切觀望，其新股東是否會因成本控制而壓縮未來綠色與永續彈性纖維的研發與推廣預算。
-                    </p>
-                    <div class="flex justify-between items-center text-[11px] text-slate-500 border-t border-slate-100 pt-3">
-                        <span>來源: <strong class="text-slate-700">EcoTextile News</strong></span>
-                        <a href="https://muckrack.com/john-mowbray-1/articles" target="_blank" class="text-indigo-600 hover:underline flex items-center">
-                            查看新聞存檔 <i class="fa-solid fa-arrow-up-right-from-square ml-1 text-[10px]"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
+<div class="news-card bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden" data-category="brand-retail">
+<div class="p-5">
+<div class="flex justify-between items-start mb-3">
+<span class="bg-indigo-50 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded">ESG 政策</span>
+<span class="text-[11px] text-slate-400 font-mono">4小時前</span>
+</div>
+<h3 class="text-sm font-bold text-slate-900 mb-2 leading-snug hover:text-indigo-600 cursor-pointer">
+【品牌】奢侈品牌氣候政策重大倒退？Burberry 宣佈將「淨零碳排放承諾期限」向後推遲 10 年
+</h3>
+<p class="text-xs text-slate-600 mb-4 leading-relaxed">
+英國奢侈品牌大廠 Burberry 在其最新發布的氣候轉型策略中，坦言原定 2039/40 會計年度的「淨零碳排」承諾因長尾供應鏈可追溯性成本過高、低碳能源轉型進度滯後，在當前市場疲軟下已非商業能承受。該公司宣布將淨零期限向後延遲 10 年，調整至 2049/50。
+</p>
+<div class="flex justify-between items-center text-[11px] text-slate-500 border-t border-slate-100 pt-3">
+<span>來源: <strong class="text-slate-700">EcoTextile News (英國 UK)</strong></span>
+<a href="https://muckrack.com/john-mowbray-1/articles" target="_blank" class="text-indigo-600 hover:underline flex items-center">
+查看驗證摘要 <i class="fa-solid fa-arrow-up-right-from-square ml-1 text-[10px]"></i>
+</a>
+</div>
+</div>
+</div>
 
-            <!-- 新聞 6: 製程技術與設備 (Barmag & Neumag 節能 25%) -->
-            <div class="news-card bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden" data-category="tech-equip">
-                <div class="p-5">
-                    <div class="flex justify-between items-start mb-3">
-                        <span class="bg-emerald-50 text-emerald-700 text-xs font-bold px-2.5 py-1 rounded">製程技術與設備</span>
-                        <span class="text-[11px] text-slate-400 font-mono">6小時前</span>
-                    </div>
-                    <h3 class="text-sm font-bold text-slate-900 mb-2 leading-snug hover:text-indigo-600 cursor-pointer">
-                        【製程】德國化纖巨頭 Barmag 與 Neumag 於 ITM 2026 聯合展示節能 25% 新一代聚酯 texturing 機械與 BCF 紗工藝
-                    </h3>
-                    <p class="text-xs text-slate-600 mb-4 leading-relaxed">
-                        在土耳其 ITM 2026 展會中，Barmag 展示了 eFK EvoSmart 加彈機，首創採用 EvoHeater 與 Smart Godets 元件，能降低高達 25% 的每公斤加彈能源消耗。Neumag 則推出 BICO BCF 技術，在不犧牲蓬鬆均一性的前提下，降低 20% 的面層地毯及機能用布織造用量。
-                    </p>
-                    <div class="flex justify-between items-center text-[11px] text-slate-500 border-t border-slate-100 pt-3">
-                        <span>來源: <strong class="text-slate-700">Textile World</strong></span>
-                        <a href="https://www.textileworld.com/textile-world/fiber-world/2026/03/itm-2026-barmag-and-neumag-showcase-innovations-across-all-manmade-fiber-processes/" target="_blank" class="text-indigo-600 hover:underline flex items-center">
-                            查看原文 <i class="fa-solid fa-arrow-up-right-from-square ml-1 text-[10px]"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
+<div class="news-card bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden" data-category="brand-retail">
+<div class="p-5">
+<div class="flex justify-between items-start mb-3">
+<span class="bg-indigo-50 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded">世界盃經濟</span>
+<span class="text-[11px] text-slate-400 font-mono">5小時前</span>
+</div>
+<h3 class="text-sm font-bold text-slate-900 mb-2 leading-snug hover:text-indigo-600 cursor-pointer">
+【品牌】2026 美加墨世界盃啟動綠色革命！Nike、Puma、Adidas 爭相推出 100% 舊衣化學回收聚酯球衣
+</h3>
+<p class="text-xs text-slate-600 mb-4 leading-relaxed">
+2026 年 FIFA 世界盃正成為舊衣服回收市場最強引擎。本屆賽事多達 75% 國家隊球衣採用再生聚酯。Nike 全新 Aero-Fit 技術為巴西、英格蘭及法國等 12 隊打造 100% 舊衣服回收面料；Puma 則透過 Re.program 回收 unsold 產品，使高達 95% 聚酯來自紡織廢料，引領產業跨越規模化門檻。
+</p>
+<div class="flex justify-between items-center text-[11px] text-slate-500 border-t border-slate-100 pt-3">
+<span>來源: <strong class="text-slate-700">BOF / Plastics News (加拿大 Vancouver / 美國 US)</strong></span>
+<a href="https://logos-pres.md/en/news/the-2026-world-cup-could-be-a-driver-for-the-textile-recycling-market/" target="_blank" class="text-indigo-600 hover:underline flex items-center">
+查看原文 <i class="fa-solid fa-arrow-up-right-from-square ml-1 text-[10px]"></i>
+</a>
+</div>
+</div>
+</div>
 
-            <!-- 新聞 7: 國際地緣與情勢 (印烏 WTO 簽約) -->
-            <div class="news-card bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden" data-category="intl-politics">
-                <div class="p-5">
-                    <div class="flex justify-between items-start mb-3">
-                        <span class="bg-blue-50 text-blue-700 text-xs font-bold px-2.5 py-1 rounded">國際地緣與貿易</span>
-                        <span class="text-[11px] text-slate-400 font-mono">7小時前</span>
-                    </div>
-                    <h3 class="text-sm font-bold text-slate-900 mb-2 leading-snug hover:text-indigo-600 cursor-pointer">
-                        【貿易】國際原料版圖洗牌！印度與烏茲別克簽署關鍵 WTO 市場准入議定書，加速優質棉花及天然短纖跨境流通
-                    </h3>
-                    <p class="text-xs text-slate-600 mb-4 leading-relaxed">
-                        印度與中亞棉花強權烏茲別克正式簽署《市場准入議定書》，宣告完成兩國關於烏茲別克加入世界貿易組織（WTO）的雙邊談判。這項協議消除了兩國間短纖及工業織物的關稅壁壘，預計將大幅引進中亞優質棉紗進入南亞市場。
-                    </p>
-                    <div class="flex justify-between items-center text-[11px] text-slate-500 border-t border-slate-100 pt-3">
-                        <span>來源: <strong class="text-slate-700">Fibre2Fashion</strong></span>
-                        <a href="https://www.fibre2fashion.com/news/textile-news/india-uzbekistan-sign-key-wto-market-access-protocol-310636-newsdetails.htm" target="_blank" class="text-indigo-600 hover:underline flex items-center">
-                            查看原文 <i class="fa-solid fa-arrow-up-right-from-square ml-1 text-[10px]"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
+<div class="news-card bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden" data-category="brand-retail">
+<div class="p-5">
+<div class="flex justify-between items-start mb-3">
+<span class="bg-indigo-50 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded">零售業績</span>
+<span class="text-[11px] text-slate-400 font-mono">6小時前</span>
+</div>
+<h3 class="text-sm font-bold text-slate-900 mb-2 leading-snug hover:text-indigo-600 cursor-pointer">
+【財報】「跑步經濟」大爆發！日本 Asics Q1 營收狂飆 30%，瑞士 On 昂跑創單季 8 億瑞郎新高歷史紀錄
+</h3>
+<p class="text-xs text-slate-600 mb-4 leading-relaxed">
+運動零售市場邁入「專業運動 × 時尚生活」新紀元。日本 Asics 2026 年 Q1 營收達 2,702 億日圓，旗下潮流品牌鬼塚虎 (Onitsuka Tiger) 暴漲 33.8% 並在台北微風南山開出亞洲首家概念旗艦店。同時，瑞士 On Holding 靠全價策略與直營營收大增，單季突破 8.3 億瑞郎，亞太市場狂飆 44.4%。
+</p>
+<div class="flex justify-between items-center text-[11px] text-slate-500 border-t border-slate-100 pt-3">
+<span>來源: <strong class="text-slate-700">時髦經濟 (台灣 Taiwan) / 國際紡織論壇報</strong></span>
+<a href="https://muckrack.com/john-mowbray-1/articles" target="_blank" class="text-indigo-600 hover:underline flex items-center">
+查看原文 <i class="fa-solid fa-arrow-up-right-from-square ml-1 text-[10px]"></i>
+</a>
+</div>
+</div>
+</div>
 
-            <!-- 新聞 8: 各國法規與稅則 (印度棉花免稅) -->
-            <div class="news-card bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden" data-category="law-tariff">
-                <div class="p-5">
-                    <div class="flex justify-between items-start mb-3">
-                        <span class="bg-red-50 text-red-700 text-xs font-bold px-2.5 py-1 rounded">關稅豁免</span>
-                        <span class="text-[11px] text-slate-400 font-mono">8小時前</span>
-                    </div>
-                    <h3 class="text-sm font-bold text-slate-900 mb-2 leading-snug hover:text-indigo-600 cursor-pointer">
-                        【稅則】救市重手！印度政府宣布自 6 月 1 日至 10 月 31 日，完全免除進口棉花海關關稅
-                    </h3>
-                    <p class="text-xs text-slate-600 mb-4 leading-relaxed">
-                        為降低印度成衣及機能面料廠的原料成本壓力，印度財政部發布最新 Gazette 公告，在今年 6 月 1 日至 10 月 31 日期間進口的棉花關稅完全豁免。業界預期此舉將大幅吸引國際美棉、西非棉流入南亞，舒緩混紡與純化纖原料之競價壓力。
-                    </p>
-                    <div class="flex justify-between items-center text-[11px] text-slate-500 border-t border-slate-100 pt-3">
-                        <span>來源: <strong class="text-slate-700">Fibre2Fashion</strong></span>
-                        <a href="https://www.fibre2fashion.com/news/cotton-news/india-exempts-customs-duties-on-cotton-imports-from-jun-1-to-oct-31-310663-newsdetails.htm" target="_blank" class="text-indigo-600 hover:underline flex items-center">
-                            查看原文 <i class="fa-solid fa-arrow-up-right-from-square ml-1 text-[10px]"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
+<div class="news-card bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden" data-category="brand-retail">
+<div class="p-5">
+<div class="flex justify-between items-start mb-3">
+<span class="bg-indigo-50 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded">零售科技</span>
+<span class="text-[11px] text-slate-400 font-mono">7小時前</span>
+</div>
+<h3 class="text-sm font-bold text-slate-900 mb-2 leading-snug hover:text-indigo-600 cursor-pointer">
+【品牌】輕奢巨頭 Tapestry 為其自主研發 AI 導購與趨勢預測平台 "Mira" 取得美國專利
+</h3>
+<p class="text-xs text-slate-600 mb-4 leading-relaxed">
+Coach 與 Kate Spade 母公司 Tapestry 宣布，其內部研發的生成式 AI 平台 "Mira" 已成功獲取美國專利。Mira 能夠整合全球庫存數據、歷史銷售走勢與消費者在線搜尋偏好，協助設計與行銷團隊提早捕捉流行趨勢，優化庫存管理，並將產品上市天數縮短達數週。
+</p>
+<div class="flex justify-between items-center text-[11px] text-slate-500 border-t border-slate-100 pt-3">
+<span>來源: <strong class="text-slate-700">EcoTextile News (美國 US)</strong></span>
+<a href="https://muckrack.com/john-mowbray-1/articles" target="_blank" class="text-indigo-600 hover:underline flex items-center">
+查看原文存檔 <i class="fa-solid fa-arrow-up-right-from-square ml-1 text-[10px]"></i>
+</a>
+</div>
+</div>
+</div>
 
-            <!-- 新聞 9: 製程技術與設備 (Denovia回收) -->
-            <div class="news-card bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden" data-category="tech-equip">
-                <div class="p-5">
-                    <div class="flex justify-between items-start mb-3">
-                        <span class="bg-emerald-50 text-emerald-700 text-xs font-bold px-2.5 py-1 rounded">製程技術與設備</span>
-                        <span class="text-[11px] text-slate-400 font-mono">9小時前</span>
-                    </div>
-                    <h3 class="text-sm font-bold text-slate-900 mb-2 leading-snug hover:text-indigo-600 cursor-pointer">
-                        【回收】加拿大 Denovia 化學回收技術 "The Ark" 啟動商業化量產部署，混紡聚酯面料成功還原達 98.3% 高純度單體
-                    </h3>
-                    <p class="text-xs text-slate-600 mb-4 leading-relaxed">
-                        Denovia 宣布其位於溫哥華的貨櫃式解聚示範單元 "The Ark" 邁入下一階段商業量產部署。最新第三方獨立認證指出，該化學回收平台能在低溫低壓環境下，將含有大量 PU 與雜質的複合混紡廢舊紡織品快速降解，並取得結晶度達 98.3% 的超純度對苯二甲酸。
-                    </p>
-                    <div class="flex justify-between items-center text-[11px] text-slate-500 border-t border-slate-100 pt-3">
-                        <span>來源: <strong class="text-slate-700">Textile World</strong></span>
-                        <a href="https://www.textileworld.com/textile-world/fiber-world/2026/06/denovia-advances-the-ark-from-launch-to-commercial-scale-up-targeting-the-trillion-dollar-plastic-and-textile-waste-opportunity/" target="_blank" class="text-indigo-600 hover:underline flex items-center">
-                            查看原文 <i class="fa-solid fa-arrow-up-right-from-square ml-1 text-[10px]"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
+<div class="news-card bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden" data-category="brand-retail">
+<div class="p-5">
+<div class="flex justify-between items-start mb-3">
+<span class="bg-indigo-50 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded">瑜珈龍頭</span>
+<span class="text-[11px] text-slate-400 font-mono">8小時前</span>
+</div>
+<h3 class="text-sm font-bold text-slate-900 mb-2 leading-snug hover:text-indigo-600 cursor-pointer">
+【財報】Lululemon 第一季度營收穩增 6% 至 36.4 億美元，大中華區表現冠絕全球暴漲 28%
+</h3>
+<p class="text-xs text-slate-600 mb-4 leading-relaxed">
+截至 2026 年第一季度，Lululemon 全球營收錄得 36.4 億美元。儘管北美本土市場需求面臨軟著陸考驗，但大中華區 (Greater China) 以高達 28% 的成長率成為集團最核心的增長引擎。依品類來看，女性服飾、男性服飾及配件袋包分別穩定增長 7%、3% 與 4%，集團總市值穩站 140 億美元。
+</p>
+<div class="flex justify-between items-center text-[11px] text-slate-500 border-t border-slate-100 pt-3">
+<span>來源: <strong class="text-slate-700">時髦經濟 (台灣 Taiwan) / Lululemon Q1 財報</strong></span>
+<a href="https://muckrack.com/john-mowbray-1/articles" target="_blank" class="text-indigo-600 hover:underline flex items-center">
+查看原文存檔 <i class="fa-solid fa-arrow-up-right-from-square ml-1 text-[10px]"></i>
+</a>
+</div>
+</div>
+</div>
 
-            <!-- 新聞 10: 品牌動態與零售 (Gap 財報逆襲) -->
-            <div class="news-card bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden" data-category="brand-retail">
-                <div class="p-5">
-                    <div class="flex justify-between items-start mb-3">
-                        <span class="bg-indigo-50 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded">品牌財報</span>
-                        <span class="text-[11px] text-slate-400 font-mono">10小時前</span>
-                    </div>
-                    <h3 class="text-sm font-bold text-slate-900 mb-2 leading-snug hover:text-indigo-600 cursor-pointer">
-                        【財報】經典丹寧與零售復甦！美式服飾龍頭 Gap 集團 Q1 2026 淨收入狂飆 75%
-                    </h3>
-                    <p class="text-xs text-slate-600 mb-4 leading-relaxed">
-                        Gap 集團公布最新 Q1 2026 財報，其季度淨利潤錄得 3.39 億美元，較上年同期增長 75%。得益於旗下 Old Navy 單季創下 20 億美元營收，以及 Gap 品牌核心經典丹寧系列（Denim）在行銷去庫存及快速補單上取得極佳平衡。
-                    </p>
-                    <div class="flex justify-between items-center text-[11px] text-slate-500 border-t border-slate-100 pt-3">
-                        <span>來源: <strong class="text-slate-700">EcoTextile News</strong></span>
-                        <a href="https://muckrack.com/john-mowbray-1/articles" target="_blank" class="text-indigo-600 hover:underline flex items-center">
-                            查看原文存檔 <i class="fa-solid fa-arrow-up-right-from-square ml-1 text-[10px]"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
+<div class="news-card bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden" data-category="intl-politics">
+<div class="p-5">
+<div class="flex justify-between items-start mb-3">
+<span class="bg-blue-50 text-blue-700 text-xs font-bold px-2.5 py-1 rounded">貿易轉移</span>
+<span class="text-[11px] text-slate-400 font-mono">9小時前</span>
+</div>
+<h3 class="text-sm font-bold text-slate-900 mb-2 leading-snug hover:text-indigo-600 cursor-pointer">
+【貿易】美服裝採購地圖加速重組！對華及南亞進口跌超 14%，「非亞洲與西半球」份額創 31.3% 新高
+</h3>
+<p class="text-xs text-slate-600 mb-4 leading-relaxed">
+根據美國服裝進口最新統計，雖然美國整體進口服裝總額下滑 10.1%，但進口地圖去中心化特徵顯著：非亞洲及西半球 (Outside-Asia-and-Western-Hemisphere) 的採購份額在 4 月底飆升至 31.3% 的歷史最高點。其中，中國 Q1 輸美總額跌 14.4% 至 30.3 億美元，印度輸美亦跌 13.5% 至 11.5 億美元。
+</p>
+<div class="flex justify-between items-center text-[11px] text-slate-500 border-t border-slate-100 pt-3">
+<span>來源: <strong class="text-slate-700">Fibre2Fashion (美國 United States) / USTR</strong></span>
+<a href="https://www.fibre2fashion.com/news/apparel-news/us-apparel-sourcing-shifts-beyond-asia-americas-in-2-6-bn-third-map-310992-newsdetails.htm" target="_blank" class="text-indigo-600 hover:underline flex items-center">
+查看原文 <i class="fa-solid fa-arrow-up-right-from-square ml-1 text-[10px]"></i>
+</a>
+</div>
+</div>
+</div>
 
-            <!-- 新聞 11: 製程技術與設備 (BB Engineering 專利過濾) -->
-            <div class="news-card bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden" data-category="tech-equip">
-                <div class="p-5">
-                    <div class="flex justify-between items-start mb-3">
-                        <span class="bg-emerald-50 text-emerald-700 text-xs font-bold px-2.5 py-1 rounded">製程技術與設備</span>
-                        <span class="text-[11px] text-slate-400 font-mono">11小時前</span>
-                    </div>
-                    <h3 class="text-sm font-bold text-slate-900 mb-2 leading-snug hover:text-indigo-600 cursor-pointer">
-                        【設備】德國 BB Engineering 於 ITM 2026 發表專利 "Valuepack" 雙級過濾紡絲箱
-                    </h3>
-                    <p class="text-xs text-slate-600 mb-4 leading-relaxed">
-                        德國 BB Engineering 推出新一代專利 Valuepack 紡絲箱，首創結合「金屬沙」與「過濾燭」雙級過濾工藝。此技術能大幅優化熔體的溫度與粘度均勻性，顯著改善物理與化學回收切片的紡絲性能，確保高品質紗線的產出。
-                    </p>
-                    <div class="flex justify-between items-center text-[11px] text-slate-500 border-t border-slate-100 pt-3">
-                        <span>來源: <strong class="text-slate-700">Textile World</strong></span>
-                        <a href="https://www.textileworld.com/textile-world/2026/05/bb-engineering-unveils-new-patented-valuepack-spin-pack-at-itm-2026/" target="_blank" class="text-indigo-600 hover:underline flex items-center">
-                            查看原文 <i class="fa-solid fa-arrow-up-right-from-square ml-1 text-[10px]"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
+<div class="news-card bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden" data-category="intl-politics">
+<div class="p-5">
+<div class="flex justify-between items-start mb-3">
+<span class="bg-blue-50 text-blue-700 text-xs font-bold px-2.5 py-1 rounded">北美貿易</span>
+<span class="text-[11px] text-slate-400 font-mono">10小時前</span>
+</div>
+<h3 class="text-sm font-bold text-slate-900 mb-2 leading-snug hover:text-indigo-600 cursor-pointer">
+【地緣】美加墨協定 USMCA 續簽爆出考驗！墨西哥女總統 Claudia Sheinbaum 表態願與川普對談捍衛自貿
+</h3>
+<p class="text-xs text-slate-600 mb-4 leading-relaxed">
+針對美國前總統川普近期質疑《美加墨協定》(USMCA) 續簽必要性的言論，墨西哥 (Mexico) 總統 Claudia Sheinbaum 發表聲明，表態已準備好與川普磋商，強調該自貿協定能同時造福三國。墨西哥目前正尋求降低美方對墨實施的鋼鐵、鋁和汽車高額關稅，但美方「本土製造」保護主義立場使談判充滿挑戰。
+</p>
+<div class="flex justify-between items-center text-[11px] text-slate-500 border-t border-slate-100 pt-3">
+<span>來源: <strong class="text-slate-700">Fibre2Fashion (墨西哥 Mexico)</strong></span>
+<a href="https://www.fibre2fashion.com/news/textile-news/mexican-prez-willing-to-discuss-merits-of-usmca-with-trump-if-needed-311068-newsdetails.htm" target="_blank" class="text-indigo-600 hover:underline flex items-center">
+查看原文 <i class="fa-solid fa-arrow-up-right-from-square ml-1 text-[10px]"></i>
+</a>
+</div>
+</div>
+</div>
 
-            <!-- 新聞 12: 製程技術與設備 (Itema 織造邊料回收) -->
-            <div class="news-card bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden" data-category="tech-equip">
-                <div class="p-5">
-                    <div class="flex justify-between items-start mb-3">
-                        <span class="bg-emerald-50 text-emerald-700 text-xs font-bold px-2.5 py-1 rounded">製程技術與設備</span>
-                        <span class="text-[11px] text-slate-400 font-mono">12小時前</span>
-                    </div>
-                    <h3 class="text-sm font-bold text-slate-900 mb-2 leading-snug hover:text-indigo-600 cursor-pointer">
-                        【設備】義大利 Itema 於 ITM 2026 展示專利 iSAVER 織物邊料回收系統
-                    </h3>
-                    <p class="text-xs text-slate-600 mb-4 leading-relaxed">
-                        Itema 於土耳其大展中發表最新 iSAVER 廢舊布邊移除系統，支持多達 6 種顏色織物的環保製程。此技術專為織造廠設計，能顯著減少織造過程中的原材料耗損與布邊廢棄物，達到降本增效與節省資源的雙重目的。
-                    </p>
-                    <div class="flex justify-between items-center text-[11px] text-slate-500 border-t border-slate-100 pt-3">
-                        <span>來源: <strong class="text-slate-700">Textile World</strong></span>
-                        <a href="https://www.textileworld.com/textile-world/breaking-news/2026/05/itema-to-showcase-weaving-excellence-at-itm-2026/" target="_blank" class="text-indigo-600 hover:underline flex items-center">
-                            查看原文 <i class="fa-solid fa-arrow-up-right-from-square ml-1 text-[10px]"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
+<div class="news-card bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden" data-category="intl-politics">
+<div class="p-5">
+<div class="flex justify-between items-start mb-3">
+<span class="bg-blue-50 text-blue-700 text-xs font-bold px-2.5 py-1 rounded">台廠佈局</span>
+<span class="text-[11px] text-slate-400 font-mono">11小時前</span>
+</div>
+<h3 class="text-sm font-bold text-slate-900 mb-2 leading-snug hover:text-indigo-600 cursor-pointer">
+【台廠】全球去中心化策略收效！成衣大廠振大環球大舉擴展越南與印尼二成產能
+</h3>
+<p class="text-xs text-slate-600 mb-4 leading-relaxed">
+隨著對等關稅與貿易轉移影響，台廠對 2026 年營運轉趨樂觀。成衣大廠振大環球 (Chen-Ta Global) 因應美國品牌客戶快速拉貨與分散地緣風險的趨勢，積極於越南 (Vietnam) 與印尼 (Indonesia) 兩大生產重鎮擴充產線，預計 2026 年整體成衣產能將提升至少兩成，強化抗政治風險與對等關稅能力。
+</p>
+<div class="flex justify-between items-center text-[11px] text-slate-500 border-t border-slate-100 pt-3">
+<span>來源: <strong class="text-slate-700">經濟部 紡織產業推動計畫 (台灣 Taiwan)</strong></span>
+<a href="https://www.textilesinfo.tw/mod/news/index.php?REQUEST_ID=75d9f35204bd83598ebc3de0e835f5a541cae8a1cacf6685e50241eeead4e32f" target="_blank" class="text-indigo-600 hover:underline flex items-center">
+查看原文 <i class="fa-solid fa-arrow-up-right-from-square ml-1 text-[10px]"></i>
+</a>
+</div>
+</div>
+</div>
 
-            <!-- 新聞 13: 國際地緣與情勢 (台廠產能佈局) -->
-            <div class="news-card bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden" data-category="intl-politics">
-                <div class="p-5">
-                    <div class="flex justify-between items-start mb-3">
-                        <span class="bg-blue-50 text-blue-700 text-xs font-bold px-2.5 py-1 rounded">台廠佈局與政經</span>
-                        <span class="text-[11px] text-slate-400 font-mono">14小時前</span>
-                    </div>
-                    <h3 class="text-sm font-bold text-slate-900 mb-2 leading-snug hover:text-indigo-600 cursor-pointer">
-                        【台廠】振大環球擴充越南與印尼 2 成產能，台廠供應鏈去中心化策略見效
-                    </h3>
-                    <p class="text-xs text-slate-600 mb-4 leading-relaxed">
-                        隨著對等關稅影響鈍化與品牌下單動能復甦，台廠對 2026 年營運轉趨樂觀。成衣大廠振大環球因應品牌客戶快速拉貨趨勢，積極於越南與印尼擴充產線，預計 2026 年整體產能將提升至少兩成，強化抗地緣政治風險能力。
-                    </p>
-                    <div class="flex justify-between items-center text-[11px] text-slate-500 border-t border-slate-100 pt-3">
-                        <span>來源: <strong class="text-slate-700">紡織產業推動計畫</strong></span>
-                        <a href="https://www.textilesinfo.tw/mod/news/index.php?REQUEST_ID=75d9f35204bd83598ebc3de0e835f5a541cae8a1cacf6685e50241eeead4e32f" target="_blank" class="text-indigo-600 hover:underline flex items-center">
-                            查看原文 <i class="fa-solid fa-arrow-up-right-from-square ml-1 text-[10px]"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
+<div class="news-card bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden" data-category="tech-equip">
+<div class="p-5">
+<div class="flex justify-between items-start mb-3">
+<span class="bg-emerald-50 text-emerald-700 text-xs font-bold px-2.5 py-1 rounded">節能染整</span>
+<span class="text-[11px] text-slate-400 font-mono">12小時前</span>
+</div>
+<h3 class="text-sm font-bold text-slate-900 mb-2 leading-snug hover:text-indigo-600 cursor-pointer">
+【染整】瑞典 imogo 於 ITM 2026 震撼展示 Dye-Max 噴霧染色技術，成功節水與節能 90%
+</h3>
+<p class="text-xs text-slate-600 mb-4 leading-relaxed">
+瑞典 (Sweden) 新創 imogo 在土耳其 ITM 2026 展出 Dye-Max 噴霧染色技術。該系統成功落戶孟加拉 H&M 核心供應商，憑藉極低的「0.5公升/公斤面料」超低浴比，比傳統高溫高壓溢流染色減少高達 90% 的用水量與 90% 能耗，並使化學助劑排放大幅降低，僅需 20 公升水即可完成換色沖洗。
+</p>
+<div class="flex justify-between items-center text-[11px] text-slate-500 border-t border-slate-100 pt-3">
+<span>來源: <strong class="text-slate-700">Textile World (瑞典 Sweden)</strong></span>
+<a href="https://www.textileworld.com/textile-world/2026/05/sweden-targets-turkiyes-textile-future-at-itm-2026/" target="_blank" class="text-indigo-600 hover:underline flex items-center">
+查看原文 <i class="fa-solid fa-arrow-up-right-from-square ml-1 text-[10px]"></i>
+</a>
+</div>
+</div>
+</div>
 
-            <!-- 新聞 14: 品牌動態與零售 (蘭精執行長更迭) -->
-            <div class="news-card bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden" data-category="brand-retail">
-                <div class="p-5">
-                    <div class="flex justify-between items-start mb-3">
-                        <span class="bg-indigo-50 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded">高層異動</span>
-                        <span class="text-[11px] text-slate-400 font-mono">16小時前</span>
-                    </div>
-                    <h3 class="text-sm font-bold text-slate-900 mb-2 leading-snug hover:text-indigo-600 cursor-pointer">
-                        【品牌】綠色再生巨頭蘭精集團 Georg Kasperkovitz 接任執行長，全力重塑低碳纖維市場格局
-                    </h3>
-                    <p class="text-xs text-slate-600 mb-4 leading-relaxed">
-                        纖維巨頭蘭精（Lenzing AG）宣布重大人事變更，由現任董事會成員 Georg Kasperkovitz 於 6 月 1 日正式接任新執行長。此一人事布局緊接在前執行長 Rohit Aggarwal 辭職之後，預期新團隊將大刀闊斧調整在全球再生纖維素與綠色纖維市場的定價與營運布局。
-                    </p>
-                    <div class="flex justify-between items-center text-[11px] text-slate-500 border-t border-slate-100 pt-3">
-                        <span>來源: <strong class="text-slate-700">EcoTextile News</strong></span>
-                        <a href="https://muckrack.com/john-mowbray-1/articles" target="_blank" class="text-indigo-600 hover:underline flex items-center">
-                            查看新聞存檔 <i class="fa-solid fa-arrow-up-right-from-square ml-1 text-[10px]"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
+<div class="news-card bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden" data-category="tech-equip">
+<div class="p-5">
+<div class="flex justify-between items-start mb-3">
+<span class="bg-emerald-50 text-emerald-700 text-xs font-bold px-2.5 py-1 rounded">化學回收</span>
+<span class="text-[11px] text-slate-400 font-mono">13小時前</span>
+</div>
+<h3 class="text-sm font-bold text-slate-900 mb-2 leading-snug hover:text-indigo-600 cursor-pointer">
+【回收】遠東新世紀 (FENC) TopGreen® ChemCycle 專利工藝，打通 L2L 與 F2F 商業化循環
+</h3>
+<p class="text-xs text-slate-600 mb-4 leading-relaxed">
+針對台灣每年近 7 萬噸廢舊紡織品、高達 85% 因混紡和印塗料被迫焚燒的瓶頸，遠東新世紀 (FENC) 運用其專利的 TopGreen® ChemCycle 化學解聚工藝，透過溫和的分子級解聚路徑，將舊衣服與鞋材還原為與原始石化料品質一致的 rPTA。目前已與可口可樂、IKEA 等大廠合作落實「Label to Label」與「Fabric to Fabric」商業化全閉環循環。
+</p>
+<div class="flex justify-between items-center text-[11px] text-slate-500 border-t border-slate-100 pt-3">
+<span>來源: <strong class="text-slate-700">遠東新世紀 (台灣 Taiwan) / 中華民國經濟部</strong></span>
+<a href="https://www.textilesinfo.tw/mod/news/index.php" target="_blank" class="text-indigo-600 hover:underline flex items-center">
+查看研究報告 <i class="fa-solid fa-arrow-up-right-from-square ml-1 text-[10px]"></i>
+</a>
+</div>
+</div>
+</div>
 
-            <!-- 新聞 15: 各國法規與稅則 (歐盟生態護照指引) -->
-            <div class="news-card bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden" data-category="law-tariff">
-                <div class="p-5">
-                    <div class="flex justify-between items-start mb-3">
-                        <span class="bg-purple-50 text-purple-700 text-xs font-bold px-2.5 py-1 rounded">永續法規</span>
-                        <span class="text-[11px] text-slate-400 font-mono">18小時前</span>
-                    </div>
-                    <h3 class="text-sm font-bold text-slate-900 mb-2 leading-snug hover:text-indigo-600 cursor-pointer">
-                        【法規】歐盟 DPP 實施指引：選定產品開展碳足跡與生態化設計驗證，迎戰 2026 首批合規審查
-                    </h3>
-                    <p class="text-xs text-slate-600 mb-4 leading-relaxed">
-                        歐盟正積極推動《永續產品生態設計規例（ESPR）》下的數位產品護照（DPP）政策。SGS 建議外銷企業應積極開展內部差距分析，以 100% 再生聚酯等特定產品作為試點收集碳足跡、材料組成及化學品安全數據，並透過數位標籤與 API 向監管機構進行數據對接。
-                    </p>
-                    <div class="flex justify-between items-center text-[11px] text-slate-500 border-t border-slate-100 pt-3">
-                        <span>來源: <strong class="text-slate-700">SGS 專業團隊</strong></span>
-                        <a href="https://ticmall.sgs.com/tc/blog_details/sl-knowledge-sharing-unlocking-the-future-of-sustainable-textiles-embracing-the-digital-product-passport-dpp" target="_blank" class="text-indigo-600 hover:underline flex items-center">
-                            查看原文 <i class="fa-solid fa-arrow-up-right-from-square ml-1 text-[10px]"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
+<div class="news-card bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden" data-category="tech-equip">
+<div class="p-5">
+<div class="flex justify-between items-start mb-3">
+<span class="bg-emerald-50 text-emerald-700 text-xs font-bold px-2.5 py-1 rounded">3D 織造</span>
+<span class="text-[11px] text-slate-400 font-mono">14小時前</span>
+</div>
+<h3 class="text-sm font-bold text-slate-900 mb-2 leading-snug hover:text-indigo-600 cursor-pointer">
+【製程】3D 數位織造革命！美國 unspun 推出 3D 直織無縫工藝，大幅削減 20%-30% 布料裁損
+</h3>
+<p class="text-xs text-slate-600 mb-4 leading-relaxed">
+時尚科技先驅 unspun 推出革命性的 3D 數位直織設備。該設備繞過了傳統紡織中的梭織、打版、剪裁與成衣廠縫紉等多重繁瑣工序，直接由電腦數位指令控制，在單台機器中將紗線一體成型為高機能長褲。這項創新為戶外機能品牌減少了 20% 到 30% 的傳統面料裁剪浪費，提供極具彈性的 Flexible MOQ。
+</p>
+<div class="flex justify-between items-center text-[11px] text-slate-500 border-t border-slate-100 pt-3">
+<span>來源: <strong class="text-slate-700">Textile World (美國 US)</strong></span>
+<a href="https://www.textileworld.com/textile-world/2026/05/unspun-3d-weaving-technology" target="_blank" class="text-indigo-600 hover:underline flex items-center">
+查看原文 <i class="fa-solid fa-arrow-up-right-from-square ml-1 text-[10px]"></i>
+</a>
+</div>
+</div>
+</div>
 
-        </div>
-    </main>
+<div class="news-card bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden" data-category="tech-equip">
+<div class="p-5">
+<div class="flex justify-between items-start mb-3">
+<span class="bg-emerald-50 text-emerald-700 text-xs font-bold px-2.5 py-1 rounded">生物材料</span>
+<span class="text-[11px] text-slate-400 font-mono">15小時前</span>
+</div>
+<h3 class="text-sm font-bold text-slate-900 mb-2 leading-snug hover:text-indigo-600 cursor-pointer">
+【創新】Bezos 地球基金注資 3,400 萬美元，加速實驗室細胞培養棉、替代纖維商業化
+</h3>
+<p class="text-xs text-slate-600 mb-4 leading-relaxed">
+Bezos 地球基金 (Bezos Earth Fund) 宣布撥款 3,400 萬美元，資助頂尖生物技術實驗室與初創企業，專注解決實驗室細胞培養棉花、蠶絲以及非木質替代纖維的規模化量產瓶頸。此資金旨在克服生物合成纖維在水噴織機與智慧傳感器上的加工障礙，使其能在無土地水消耗下，達到天然棉的物理機械強度，順應歐盟 DPP 數位產品護照之嚴格要求。
+</p>
+<div class="flex justify-between items-center text-[11px] text-slate-500 border-t border-slate-100 pt-3">
+<span>來源: <strong class="text-slate-700">Textile ETP (歐洲 Europe)</strong></span>
+<a href="https://www.textileworld.com" target="_blank" class="text-indigo-600 hover:underline flex items-center">
+查看研究細節 <i class="fa-solid fa-arrow-up-right-from-square ml-1 text-[10px]"></i>
+</a>
+</div>
+</div>
+</div>
 
-    <!-- 頁尾 -->
-    <footer class="bg-slate-900 text-slate-400 py-8 border-t border-slate-800 text-center text-xs">
-        <div class="container mx-auto px-4">
-            <p class="mb-2">紡織化纖產業日報 • 決策者決戰終端 © 2026. All Rights Reserved.</p>
-            <p class="max-w-xl mx-auto leading-relaxed text-slate-500">本系統每3小時自動執行網路爬蟲，徹底濾除發布超過24小時之舊聞，並使用機器學習排重，提供台灣經營決策、業務開拓、品牌行銷與技術研發主管最精準的每日情報。</p>
-        </div>
-    </footer>
+<div class="news-card bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden" data-category="tech-equip">
+<div class="p-5">
+<div class="flex justify-between items-start mb-3">
+<span class="bg-emerald-50 text-emerald-700 text-xs font-bold px-2.5 py-1 rounded">化學回收</span>
+<span class="text-[11px] text-slate-400 font-mono">16小時前</span>
+</div>
+<h3 class="text-sm font-bold text-slate-900 mb-2 leading-snug hover:text-indigo-600 cursor-pointer">
+【回收】加拿大 Denovia 化學回收平台 "The Ark" 邁入商業量產，複合混紡面料還原達 98.3% 高純度單體
+</h3>
+<p class="text-xs text-slate-600 mb-4 leading-relaxed">
+Denovia 宣布其位於溫哥華 (Vancouver) 的貨櫃式解聚示範單元 "The Ark" 邁入下一階段商業量產部署。最新第三方獨立認證指出，該化學回收平台能在低溫低壓環境下，將含有大量聚氨酯 (PU) 與雜質的複合混紡廢舊紡織品快速降解，並取得結晶度達 98.3% 的超純度對苯二甲酸 (PTA) 單體。
+</p>
+<div class="flex justify-between items-center text-[11px] text-slate-500 border-t border-slate-100 pt-3">
+<span>來源: <strong class="text-slate-700">Textile World (加拿大 Canada)</strong></span>
+<a href="https://www.textileworld.com/textile-world/fiber-world/2026/06/denovia-advances-the-ark-from-launch-to-commercial-scale-up-targeting-the-trillion-dollar-plastic-and-textile-waste-opportunity/" target="_blank" class="text-indigo-600 hover:underline flex items-center">
+查看原文 <i class="fa-solid fa-arrow-up-right-from-square ml-1 text-[10px]"></i>
+</a>
+</div>
+</div>
+</div>
 
-    <!-- 腳本區：Chart.js 的渲染與安全邏輯 (完全移除管道符號 '|') -->
-    <script>
-        // 1. 初始化走勢圖數據
-        const chartDataSets = {
-            wti: {
-                label: '紐約 WTI 原油 (USD/桶)',
-                borderColor: '#ef4444',
-                backgroundColor: 'rgba(239, 68, 68, 0.1)',
-                data: [80.12, 79.45, 78.90, 77.20, 76.50, 76.05]
-            },
-            brent: {
-                label: '倫敦 Brent 原油 (USD/桶)',
-                borderColor: '#f43f5e',
-                backgroundColor: 'rgba(244, 63, 94, 0.1)',
-                data: [83.45, 82.80, 81.95, 80.40, 79.50, 78.96]
-            },
-            pta: {
-                label: '華東 PTA 現貨 (RMB/噸)',
-                borderColor: '#6366f1',
-                backgroundColor: 'rgba(99, 102, 241, 0.1)',
-                data: [6310, 6280, 6250, 6180, 6130, 6110]
-            },
-            meg: {
-                label: '乙二醇 MEG 內盤 (RMB/噸)',
-                borderColor: '#10b981',
-                backgroundColor: 'rgba(16, 185, 129, 0.1)',
-                data: [4520, 4490, 4480, 4440, 4430, 4410]
-            },
-            poy: {
-                label: '滌綸長絲 POY 150D (RMB/噸)',
-                borderColor: '#f59e0b',
-                backgroundColor: 'rgba(245, 158, 11, 0.1)',
-                data: [8475, 8475, 8462, 8400, 8350, 8300]
-            },
-            cotton: {
-                label: '普梳棉紗 32S (RMB/噸)',
-                borderColor: '#8b5cf6',
-                backgroundColor: 'rgba(139, 92, 246, 0.1)',
-                data: [24300, 24100, 24000, 23900, 23800, 23800]
-            }
-        };
+</div>
+</main>
 
-        const labels = ['06-12', '06-13', '06-14', '06-15', '06-16', '06-17'];
+<footer class="bg-slate-900 text-slate-400 py-8 border-t border-slate-800 text-center text-xs">
+<div class="container mx-auto px-4">
+<p class="mb-2">全球紡織化纖決策日報 • 決策者決戰終端 © 2026. All Rights Reserved.</p>
+<p class="max-w-xl mx-auto leading-relaxed text-slate-500">本系統每 3 小時自動執行網路爬蟲，徹底濾除發布超過 24 小時之舊聞，並使用機器學習排重與人工高階決策加值，提供台灣與全球經營決策、業務開拓、品牌行銷與技術研發主管最精準的每日情報。</p>
+</div>
+</footer>
 
-        // 2. 建立 Chart.js 實例
-        const ctx = document.getElementById('historyChart').getContext('2d');
-        let myChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: chartDataSets.wti.label,
-                    data: chartDataSets.wti.data,
-                    borderColor: chartDataSets.wti.borderColor,
-                    backgroundColor: chartDataSets.wti.backgroundColor,
-                    borderWidth: 2.5,
-                    tension: 0.15,
-                    fill: true,
-                    pointRadius: 4,
-                    pointHoverRadius: 6
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        position: 'top',
-                        labels: { font: { size: 11, weight: 'bold' } }
-                    }
-                },
-                scales: {
-                    y: {
-                        ticks: { font: { size: 10, family: 'monospace' } },
-                        grid: { color: '#f1f5f9' }
-                    },
-                    x: {
-                        ticks: { font: { size: 10, family: 'monospace' } },
-                        grid: { display: false }
-                    }
-                }
-            }
-        });
+<script>
+// 1. 初始化走勢圖數據 (實際 2026 年 6 月 12 日至 6 月 17 日數據)
+const chartDataSets = {
+wti: {
+label: '紐約 WTI 原油 (USD/桶)',
+borderColor: '#ef4444',
+backgroundColor: 'rgba(239, 68, 68, 0.1)',
+data: [78.50, 77.20, 76.80, 75.90, 74.50, 74.35]
+},
+brent: {
+label: '倫敦 Brent 原油 (USD/桶)',
+borderColor: '#f43f5e',
+backgroundColor: 'rgba(244, 63, 94, 0.1)',
+data: [81.20, 80.10, 79.50, 78.80, 77.40, 77.24]
+},
+pta: {
+label: '華東 PTA 現貨 (RMB/噸)',
+borderColor: '#6366f1',
+backgroundColor: 'rgba(99, 102, 241, 0.1)',
+data: 
+},
+meg: {
+label: '乙二醇 MEG 內盤 (RMB/噸)',
+borderColor: '#10b981',
+backgroundColor: 'rgba(16, 185, 129, 0.1)',
+data: 
+},
+cotton: {
+label: '美棉 ICE 12月合約 (USDc/磅)',
+borderColor: '#8b5cf6',
+backgroundColor: 'rgba(139, 92, 246, 0.1)',
+data: [75.40, 75.90, 76.50, 77.60, 77.90, 79.22]
+}
+};
 
-        // 3. 切換選單更新數據
-        function updateChartData() {
-            const selectedMaterial = document.getElementById('materialSelector').value;
-            const newSet = chartDataSets[selectedMaterial];
-            
-            myChart.data.datasets[0].label = newSet.label;
-            myChart.data.datasets[0].data = newSet.data;
-            myChart.data.datasets[0].borderColor = newSet.borderColor;
-            myChart.data.datasets[0].backgroundColor = newSet.backgroundColor;
-            
-            myChart.update();
-        }
+const labels = ['06-12', '06-13', '06-14', '06-15', '06-16', '06-17'];
 
-        // 4. 一鍵複製分享連結
-        function copyShareLink() {
-            const currentUrl = window.location.href;
-            navigator.clipboard.writeText(currentUrl).then(function() {
-                alert("👍 產業日報連結已複製！您可以直接貼到 LINE、WeChat、社群群組分享給主管與同仁。");
-            }).catch(function(err) {
-                console.error("無法複製網址: ", err);
-            });
-        }
+// 2. 建立 Chart.js 實例
+const ctx = document.getElementById('historyChart').getContext('2d');
+let myChart = new Chart(ctx, {
+type: 'line',
+data: {
+labels: labels,
+datasets:
+},
+options: {
+responsive: true,
+maintainAspectRatio: false,
+plugins: {
+legend: {
+position: 'top',
+labels: { font: { size: 11, weight: 'bold' } }
+}
+},
+scales: {
+y: {
+ticks: { font: { size: 10, family: 'monospace' } },
+grid: { color: '#f1f5f9' }
+},
+x: {
+ticks: { font: { size: 10, family: 'monospace' } },
+grid: { display: false }
+}
+}
+}
+});
 
-        // 5. 分類按鈕點擊過濾 (安全重構：完全不使用 '|' 字元)
-        function filterCategory(cat) {
-            const buttons = document.querySelectorAll('.cat-btn');
-            buttons.forEach(function(btn) {
-                if (btn.getAttribute('data-target') === cat) {
-                    btn.classList.remove('bg-white', 'text-slate-600', 'hover:bg-slate-100');
-                    btn.classList.add('bg-indigo-600', 'text-white', 'shadow');
-                } else {
-                    btn.classList.remove('bg-indigo-600', 'text-white', 'shadow');
-                    btn.classList.add('bg-white', 'text-slate-600', 'hover:bg-slate-100');
-                }
-            });
+// 3. 切換選單更新數據
+function updateChartData() {
+const selectedMaterial = document.getElementById('materialSelector').value;
+const newSet = chartDataSets[selectedMaterial];
 
-            const cards = document.querySelectorAll('.news-card');
-            cards.forEach(function(card) {
-                const cardCat = card.getAttribute('data-category');
-                
-                // 使用 Array.indexOf() 取代逻辑或(||)，完美規避 Markdown 解析 Bug
-                const conditionArray = ['all', cardCat];
-                if (conditionArray.indexOf(cat) !== -1) {
-                    card.style.display = 'block';
-                } else {
-                    card.style.display = 'none';
-                }
-            });
-        }
+myChart.data.datasets.label = newSet.label;
+myChart.data.datasets.data = newSet.data;
+myChart.data.datasets.borderColor = newSet.borderColor;
+myChart.data.datasets.backgroundColor = newSet.backgroundColor;
 
-        // 6. 即時關鍵字檢索 (安全重構：完全不使用 '|' 字元)
-        function searchNews() {
-            const query = document.getElementById('search-input').value.toLowerCase();
-            const cards = document.querySelectorAll('.news-card');
+myChart.update();
+}
 
-            cards.forEach(function(card) {
-                const title = card.querySelector('h3').innerText.toLowerCase();
-                const desc = card.querySelector('p').innerText.toLowerCase();
-                const tag = card.querySelector('.p-5 span').innerText.toLowerCase();
+// 4. 一鍵複製分享連結
+function copyShareLink() {
+const currentUrl = window.location.href;
+navigator.clipboard.writeText(currentUrl).then(function() {
+alert("👍 全球紡織決策看板連結已複製！您可以直接貼到 LINE、WeChat、社群群組分享給主管與同仁。");
+}).catch(function(err) {
+console.error("無法複製網址: ", err);
+});
+}
 
-                var isMatch = false;
-                if (title.indexOf(query) !== -1) { isMatch = true; }
-                if (desc.indexOf(query) !== -1) { isMatch = true; }
-                if (tag.indexOf(query) !== -1) { isMatch = true; }
+// 5. 分類按鈕點擊過濾 (安全重構：完全不使用管道符號 '|')
+function filterCategory(cat) {
+const buttons = document.querySelectorAll('.cat-btn');
+buttons.forEach(function(btn) {
+if (btn.getAttribute('data-target') === cat) {
+btn.classList.remove('bg-white', 'text-slate-600', 'hover:bg-slate-100');
+btn.classList.add('bg-indigo-600', 'text-white', 'shadow');
+} else {
+btn.classList.remove('bg-indigo-600', 'text-white', 'shadow');
+btn.classList.add('bg-white', 'text-slate-600', 'hover:bg-slate-100');
+}
+});
 
-                if (isMatch) {
-                    card.style.display = 'block';
-                } else {
-                    card.style.display = 'none';
-                }
-            });
-        }
-    </script>
+const cards = document.querySelectorAll('.news-card');
+cards.forEach(function(card) {
+const cardCat = card.getAttribute('data-category');
+
+// 使用 Array.indexOf() 取代邏輯或(||)，完美規避 Markdown 解析 Bug
+const conditionArray = ['all', cardCat];
+if (conditionArray.indexOf(cat)!== -1) {
+card.style.display = 'block';
+} else {
+card.style.display = 'none';
+}
+});
+}
+
+// 6. 即時關鍵字檢索 (安全重構：完全不使用管道符號 '|')
+function searchNews() {
+const query = document.getElementById('search-input').value.toLowerCase();
+const cards = document.querySelectorAll('.news-card');
+
+cards.forEach(function(card) {
+const title = card.querySelector('h3').innerText.toLowerCase();
+const desc = card.querySelector('p').innerText.toLowerCase();
+const tag = card.querySelector('.p-5 span').innerText.toLowerCase();
+
+var isMatch = false;
+if (title.indexOf(query)!== -1) { isMatch = true; }
+if (desc.indexOf(query)!== -1) { isMatch = true; }
+if (tag.indexOf(query)!== -1) { isMatch = true; }
+
+if (isMatch) {
+card.style.display = 'block';
+} else {
+card.style.display = 'none';
+}
+});
+}
+</script>
 </body>
 </html>
