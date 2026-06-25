@@ -1,626 +1,1416 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>全球紡織化纖決策日報 - 24H 實時智能決策看板</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<style>
-.news-card {
-transition: all 0.2s ease-in-out;
-}
-.news-card:hover {
-transform: translateY(-2px);
-box-shadow: 0 10px 20px -3px rgba(0, 0, 0, 0.1);
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>每日紡織化纖情報智庫 - Flipboard Style Platform</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: 襯線與無襯線高級排版字型 -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&family=Noto+Sans+TC:wght@300;400;500;700;900&family=Playfair+Display:ital,wght@0,600;0,800;1,600&display=swap" rel="stylesheet">
+    <!-- FontAwesome 圖標 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- KaTeX 數學公式排版 (取代 Unicode，保證完美 LaTeX 公式呈現) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Noto Sans TC', 'sans-serif'],
+                        serif: ['Noto Serif TC', 'serif'],
+                        editorial: ['Playfair Display', 'Noto Serif TC', 'serif'],
+                    },
+                    colors: {
+                        paper: '#fdfdfb',
+                        ink: '#1c1b18',
+                        warmgray: '#f5f3ef',
+                        bordergold: '#eadecf',
+                        emeraldgreen: '#117a65',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* 訂製流暢捲動與排版微細節 */
+        body {
+            background-color: #f5f3ef;
+            color: #1c1b18;
+            overflow-x: hidden;
+        }
+        /* 仿實體雜誌紙質紋理與陰影微動效 */
+        .paper-texture {
+            background-image: radial-gradient(rgba(0,0,0,0.015) 1px, transparent 0), radial-gradient(rgba(0,0,0,0.01) 1px, transparent 0);
+            background-size: 8px 8px;
+            background-position: 0 0, 4px 4px;
+        }
+        /* Flipbook 3D Page Turn Core Animation Styles */
+        .flipbook-container {
+            perspective: 2000px;
+        }
+        .book {
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.8s cubic-bezier(0.15, 0.9, 0.34, 1);
+        }
+        .page {
+            position: absolute;
+            width: 50%;
+            height: 100%;
+            top: 0;
+            transform-style: preserve-3d;
+            transform-origin: left center;
+            transition: transform 0.9s cubic-bezier(0.2, 0.85, 0.35, 1.02);
+            z-index: 10;
+        }
+        .page-left {
+            left: 0;
+            transform-origin: right center;
+        }
+        .page-right {
+            left: 50%;
+            transform-origin: left center;
+        }
+        /* 模擬翻頁時的立體摺疊與背面遮擋 */
+        .page-front, .page-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            backface-visibility: hidden;
+            box-shadow: inset 3px 0 20px rgba(0,0,0,0.06);
+        }
+        .page-back {
+            transform: rotateY(180deg);
+        }
+        /* 翻頁陰影特效 */
+        .spine-shadow {
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.15), inset 0 0 20px rgba(0,0,0,0.1);
+        }
+        /* 隱藏捲動條但保留功能 */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
 </head>
-<body class="bg-slate-50 text-slate-800 font-sans leading-normal tracking-normal">
+<body class="font-sans antialiased">
 
-<header class="bg-slate-950 text-white sticky top-0 z-50 shadow-md">
-<div class="container mx-auto px-4 py-3.5 flex flex-wrap justify-between items-center">
-<div class="flex items-center space-x-3">
-<i class="fa-solid fa-arrows-spin text-2xl text-emerald-400 animate-spin"></i>
-<div>
-<h1 class="text-xl font-bold tracking-wider">全球紡織化纖決策日報</h1>
-<p class="text-xs text-indigo-200">24H 滾動更新 • 每日 07:00 準時發布</p>
-</div>
-</div>
-<div class="flex items-center space-x-4 mt-2 sm:mt-0">
-<span class="bg-slate-800 px-3 py-1.5 rounded-full text-xs text-emerald-300 font-mono">
-<i class="fa-regular fa-clock mr-1"></i>2026-06-18 07:00 TST
-</span>
-<button onclick="copyShareLink()" class="bg-emerald-500 hover:bg-emerald-600 text-white px-3.5 py-1.5 rounded-lg text-xs font-semibold flex items-center transition duration-150">
-<i class="fa-solid fa-share-nodes mr-1"></i> 分享決策看板
-</button>
-</div>
-</div>
-</header>
+<div id="app" class="min-h-screen flex flex-col justify-between">
+    <!-- 高級頂部導航欄 (Editorial Header) -->
+    <header class="border-b border-bordergold bg-paper py-4 px-6 md:px-12 z-40 sticky top-0 shadow-sm">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-4">
+                <div class="bg-ink text-paper w-10 h-10 flex items-center justify-center font-bold text-xl rounded">F</div>
+                <div>
+                    <h1 class="font-editorial text-2xl font-extrabold tracking-tight">DAILY TEXTILE & FIBER</h1>
+                    <p class="text-xs tracking-widest text-neutral-500 font-bold">每日紡織化纖產情智庫平台 / VOL. 2026.06</p>
+                </div>
+            </div>
+            <!-- 控制按鈕 -->
+            <div class="flex flex-wrap gap-2 items-center text-sm">
+                <button onclick="setAppView('dashboard')" id="btn-view-dashboard" class="px-4 py-2 rounded font-medium transition-all duration-200 bg-ink text-paper shadow-md">
+                    <i class="fa-solid fa-chart-line mr-2"></i>智能決策看板
+                </button>
+                <button onclick="setAppView('flipbook')" id="btn-view-flipbook" class="px-4 py-2 rounded font-medium transition-all duration-200 bg-warmgray text-neutral-700 hover:bg-neutral-200">
+                    <i class="fa-solid fa-book-open mr-2"></i>3D 紙媒翻頁模式
+                </button>
+                <button onclick="setAppView('engine')" id="btn-view-engine" class="px-4 py-2 rounded font-medium transition-all duration-200 bg-warmgray text-neutral-700 hover:bg-neutral-200">
+                    <i class="fa-solid fa-microchip mr-2"></i>排版與去重引擎
+                </button>
+            </div>
+        </div>
+    </header>
 
-<section class="bg-slate-900 text-white border-b border-indigo-950 py-3 overflow-x-auto">
-<div class="container mx-auto px-4 flex space-x-6 min-w-max text-xs font-mono items-center">
-<span class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center">
-<i class="fa-solid fa-chart-line text-emerald-400 mr-2"></i>即時能化與棉花行情：
-</span>
-<div class="flex items-center space-x-1">
-<span>WTI原油(美國 US):</span>
-<span class="text-emerald-300">74.35 美元/桶</span>
-<span class="text-red-400 text-xs"><i class="fa-solid fa-caret-down"></i> 3.18%</span>
-</div>
-<span class="text-slate-700">/</span>
-<div class="flex items-center space-x-1">
-<span>Brent原油(英國 UK):</span>
-<span class="text-emerald-300">77.24 美元/桶</span>
-<span class="text-red-400 text-xs"><i class="fa-solid fa-caret-down"></i> 2.90%</span>
-</div>
-<span class="text-slate-700">/</span>
-<div class="flex items-center space-x-1">
-<span>華東 PTA(中國 CN):</span>
-<span class="text-emerald-300">5,980 人民幣/噸</span>
-<span class="text-red-400 text-xs"><i class="fa-solid fa-caret-down"></i> 1.03%</span>
-</div>
-<span class="text-slate-700">/</span>
-<div class="flex items-center space-x-1">
-<span>MEG 內盤(中國 CN):</span>
-<span class="text-emerald-300">4,380 人民幣/噸</span>
-<span class="text-emerald-400 text-xs"><i class="fa-solid fa-caret-up"></i> 0.33%</span>
-</div>
-<span class="text-slate-700">/</span>
-<div class="flex items-center space-x-1">
-<span>ICE 美棉(美國 US):</span>
-<span class="text-emerald-300">76.20 美分/磅</span>
-<span class="text-emerald-400 text-xs"><i class="fa-solid fa-caret-up"></i> 0.52%</span>
-</div>
-<span class="text-slate-700">/</span>
-<div class="flex items-center space-x-1">
-<span>中國棉花 3128B:</span>
-<span class="text-emerald-300">17,400 人民幣/噸</span>
-<span class="text-slate-400 text-xs">持平</span>
-</div>
-</div>
-</section>
+    <!-- 主區塊 -->
+    <main class="flex-grow max-w-7xl w-full mx-auto p-4 md:p-8 flex flex-col gap-6">
+        
+        <!-- ==================== View 1: 智能決策看板 (Smart Dashboard) ==================== -->
+        <div id="view-dashboard" class="flex flex-col gap-6">
+            <!-- 頂部資訊與過濾欄 -->
+            <div class="flex flex-col md:flex-row md:items-center justify-between bg-paper p-6 rounded-lg border border-bordergold shadow-sm gap-4">
+                <div>
+                    <h2 class="text-xl font-bold font-serif flex items-center gap-2">
+                        <span class="inline-block w-2.5 h-5 bg-ink"></span>
+                        當日決策流 (Duplo Adaptive Feed)
+                    </h2>
+                    <p class="text-sm text-neutral-500 mt-1">
+                        系統已融合 <span class="font-bold text-ink">5 維因果鏈</span> 數據，自動完成 Fuzzy MinHash 去重並自適應排版。
+                    </p>
+                </div>
+                <div class="flex flex-wrap items-center gap-2">
+                    <span class="text-xs font-bold text-neutral-400 mr-1">情報分類：</span>
+                    <button onclick="filterCategory('all')" class="filter-btn px-3 py-1.5 rounded-full text-xs font-bold transition-all bg-ink text-paper">全部</button>
+                    <button onclick="filterCategory('price')" class="filter-btn px-3 py-1.5 rounded-full text-xs font-bold transition-all bg-warmgray text-neutral-700 hover:bg-neutral-200">石化報價</button>
+                    <button onclick="filterCategory('trend')" class="filter-btn px-3 py-1.5 rounded-full text-xs font-bold transition-all bg-warmgray text-neutral-700 hover:bg-neutral-200">流行與品牌</button>
+                    <button onclick="filterCategory('rd')" class="filter-btn px-3 py-1.5 rounded-full text-xs font-bold transition-all bg-warmgray text-neutral-700 hover:bg-neutral-200">技術研發</button>
+                    <button onclick="filterCategory('regulation')" class="filter-btn px-3 py-1.5 rounded-full text-xs font-bold transition-all bg-warmgray text-neutral-700 hover:bg-neutral-200">法規與關稅</button>
+                    
+                    <button onclick="triggerSimulatedCrawl()" class="ml-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-3.5 py-1.5 rounded-full shadow-sm transition-all flex items-center gap-1.5">
+                        <i class="fa-solid fa-arrow-rotate-right animate-spin-hover"></i> 實時抓取新情報
+                    </button>
+                </div>
+            </div>
 
-<section class="container mx-auto px-4 py-6">
-<div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-<div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
-<div>
-<h2 class="text-lg font-bold text-slate-900 flex items-center">
-<i class="fa-solid fa-chart-line text-indigo-600 mr-2"></i> 關鍵原料日級歷史走勢圖 (06-12 至 06-17)
-</h2>
-<p class="text-xs text-slate-500 mt-1">追蹤全球化纖與天然纖維基準每日收盤價變動 (美伊協議期盼、歐美減息與能化成本重組影響)</p>
-</div>
-<div class="mt-4 md:mt-0">
-<label for="materialSelector" class="text-xs font-bold text-slate-600 mr-2">選擇原料種類:</label>
-<select id="materialSelector" onchange="updateChartData()" class="bg-slate-100 border border-slate-300 text-slate-700 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 p-2 font-semibold">
-<option value="wti">紐約 WTI 原油 (USD/桶)</option>
-<option value="brent">倫敦 Brent 原油 (USD/桶)</option>
-<option value="pta">華東 PTA 現貨 (RMB/噸)</option>
-<option value="meg">乙二醇 MEG 內盤 (RMB/噸)</option>
-<option value="cotton">美棉 ICE 12月合約 (USDc/磅)</option>
-</select>
-</div>
-</div>
-<div class="relative h-72 md:h-96 w-full">
-<canvas id="historyChart"></canvas>
-</div>
-</div>
-</section>
+            <!-- 即時石化原物料波動帶 (Exact Filtering Monitor) -->
+            <div class="bg-paper border border-bordergold rounded-lg p-4 shadow-sm overflow-hidden">
+                <div class="flex items-center justify-between mb-3 border-b border-warmgray pb-2">
+                    <h3 class="text-xs font-black tracking-wider text-neutral-400 uppercase">
+                        <i class="fa-solid fa-database mr-1 text-neutral-400"></i> 原料精確報價實時監視槽 (SHA256 去重防衝突機制開啟中)
+                    </h3>
+                    <span class="text-[10px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-mono font-bold">SHA256 Active</span>
+                </div>
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3" id="price-monitor-bar">
+                    <!-- Dynamic Prices Rendered Here -->
+                </div>
+            </div>
 
-<main class="container mx-auto px-4 py-2 pb-12">
-<div class="flex flex-col lg:flex-row lg:items-center justify-between mb-8 space-y-4 lg:space-y-0">
-<div class="flex space-x-1.5 overflow-x-auto pb-2 lg:pb-0" id="category-tabs">
-<button onclick="filterCategory('all')" class="cat-btn px-3.5 py-2 rounded-lg text-xs font-bold transition duration-150 bg-indigo-600 text-white shadow" data-target="all">
-全部資訊
-</button>
-<button onclick="filterCategory('brand-retail')" class="cat-btn px-3.5 py-2 rounded-lg text-xs font-bold transition duration-150 bg-white text-slate-600 hover:bg-slate-100 border border-slate-200" data-target="brand-retail">
-品牌策略與零售動態
-</button>
-<button onclick="filterCategory('law-tariff')" class="cat-btn px-3.5 py-2 rounded-lg text-xs font-bold transition duration-150 bg-white text-slate-600 hover:bg-slate-100 border border-slate-200" data-target="law-tariff">
-各國法規與稅則壁壘
-</button>
-<button onclick="filterCategory('intl-politics')" class="cat-btn px-3.5 py-2 rounded-lg text-xs font-bold transition duration-150 bg-white text-slate-600 hover:bg-slate-100 border border-slate-200" data-target="intl-politics">
-國際地緣與採購情勢
-</button>
-<button onclick="filterCategory('tech-equip')" class="cat-btn px-3.5 py-2 rounded-lg text-xs font-bold transition duration-150 bg-white text-slate-600 hover:bg-slate-100 border border-slate-200" data-target="tech-equip">
-製程技術與設備創新
-</button>
-</div>
+            <!-- 智庫情報 Flipboard-Style 雜誌動態網格 (Duplo Grid Container) -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 min-h-[500px]" id="dashboard-intelligence-grid">
+                <!-- Articles Rendered Dynamically -->
+            </div>
+        </div>
 
-<div class="relative w-full lg:w-80">
-<input type="text" id="search-input" onkeyup="searchNews()" placeholder="搜尋品牌、原料、法規、設備、台廠..." class="w-full pl-10 pr-4 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-xs">
-<i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-slate-400 text-xs"></i>
-</div>
-</div>
+        <!-- ==================== View 2: 3D 紙媒翻頁模式 (3D Flipbook) ==================== -->
+        <div id="view-flipbook" class="hidden flex-col gap-6 items-center">
+            <div class="text-center max-w-xl mx-auto mb-2">
+                <h2 class="text-2xl font-serif font-bold text-ink">紙媒觸感 3D 電子產情日報</h2>
+                <p class="text-sm text-neutral-500 mt-1">點擊左右兩側頁面邊緣，或使用下方控制按鈕模擬 Flipboard 流暢雙頁 3D 紙頁翻轉效應。</p>
+            </div>
 
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="news-container">
+            <!-- 3D Book Container -->
+            <div class="w-full max-w-5xl h-[560px] md:h-[680px] bg-paper border border-bordergold shadow-2xl rounded-lg p-4 flex flex-col justify-between paper-texture">
+                
+                <!-- Main Book Visual Frame -->
+                <div class="flipbook-container w-full h-[88%] relative flex justify-center items-center">
+                    
+                    <!-- Open Book Spine & Background Shadows -->
+                    <div class="absolute w-[4px] h-[98%] bg-neutral-200 z-30 left-1/2 -translate-x-1/2 spine-shadow rounded-full opacity-60"></div>
+                    <div class="absolute w-[40px] h-[98%] bg-gradient-to-r from-neutral-300 via-transparent to-neutral-300 z-20 left-1/2 -translate-x-1/2 opacity-30"></div>
 
-<div class="news-card bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden" data-category="law-tariff">
-<div class="p-5">
-<div class="flex justify-between items-start mb-3">
-<span class="bg-red-50 text-red-700 text-xs font-bold px-2.5 py-1 rounded">合規審查</span>
-<span class="text-[11px] text-slate-400 font-mono">1小時前</span>
-</div>
-<h3 class="text-sm font-bold text-slate-900 mb-2 leading-snug hover:text-indigo-600 cursor-pointer">
-【法規】中國《供應鏈安全法》強勢實施，跨國時裝品牌常規 ESG 與碳足跡審計面臨數據合規雙向衝突
-</h3>
-<p class="text-xs text-slate-600 mb-4 leading-relaxed">
-中國《供應鏈安全法》(China Supply Chain Security Law) 已無過渡期強制執行。新規要求所有在華開展的供應鏈調查與碳足跡審計需經國家安全審查。法律專家警告，若跨國時裝品牌為滿足歐美 ESG 與反強迫勞動規定而在華單方面搜集供應鏈溯源數據，極易違反中方法律，使代工廠與品牌陷入合規夾縫。
-</p>
-<div class="flex justify-between items-center text-[11px] text-slate-500 border-t border-slate-100 pt-3">
-<span>來源: <strong class="text-slate-700">Morgan Lewis 摩根路易斯 (美國 US)</strong></span>
-<a href="https://www.morganlewis.com/news/2026/05/china-law-puts-fashion-brands-in-compliance-bind" target="_blank" class="text-indigo-600 hover:underline flex items-center">
-查看原文 <i class="fa-solid fa-arrow-up-right-from-square ml-1 text-[10px]"></i>
-</a>
-</div>
-</div>
-</div>
+                    <!-- Virtual Pages -->
+                    <div id="virtual-book" class="w-full h-full flex relative select-none">
+                        <!-- Pages are rendered here via JavaScript -->
+                    </div>
 
-<div class="news-card bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden" data-category="law-tariff">
-<div class="p-5">
-<div class="flex justify-between items-start mb-3">
-<span class="bg-purple-50 text-purple-700 text-xs font-bold px-2.5 py-1 rounded">稅率改革</span>
-<span class="text-[11px] text-slate-400 font-mono">2小時前</span>
-</div>
-<h3 class="text-sm font-bold text-slate-900 mb-2 leading-snug hover:text-indigo-600 cursor-pointer">
-【稅則】印度 GST 2.0 新政強勢消除人造纖維與棉花稅率倒掛，全面迎戰美國 50% 高額反傾銷關稅
-</h3>
-<p class="text-xs text-slate-600 mb-4 leading-relaxed">
-印度 (India) 財政部推動商品與服務稅改革 (GST 2.0)，徹底解決了化纖與合成原料的「倒掛稅率」痛點，實現全纖維中立，並將 5% 優惠稅率上限放寬至 2,500 盧比。此舉旨在協助成衣業降本。然而，美國對印度商品實施的高達 50% 對等及反傾銷關稅，正大幅削弱南亞成衣在美出口競爭力。
-</p>
-<div class="flex justify-between items-center text-[11px] text-slate-500 border-t border-slate-100 pt-3">
-<span>來源: <strong class="text-slate-700">Fibre2Fashion (印度 India)</strong></span>
-<a href="https://www.fibre2fashion.com/news/textile-news/gst-2-0-boosts-textiles-but-us-tariff-poses-challenge-citi-ey-india-305548-newsdetails.htm" target="_blank" class="text-indigo-600 hover:underline flex items-center">
-查看原文 <i class="fa-solid fa-arrow-up-right-from-square ml-1 text-[10px]"></i>
-</a>
-</div>
-</div>
-</div>
+                </div>
 
-<div class="news-card bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden" data-category="law-tariff">
-<div class="p-5">
-<div class="flex justify-between items-start mb-3">
-<span class="bg-red-50 text-red-700 text-xs font-bold px-2.5 py-1 rounded">關稅判定</span>
-<span class="text-[11px] text-slate-400 font-mono">3小時前</span>
-</div>
-<h3 class="text-sm font-bold text-slate-900 mb-2 leading-snug hover:text-indigo-600 cursor-pointer">
-【關稅】美國最高法院拒絕受理中國 301 關稅挑戰案司法覆審，對華高額懲罰性稅則壁壘正式常態化
-</h3>
-<p class="text-xs text-slate-600 mb-4 leading-relaxed">
-美國最高法院 (US Supreme Court) 正式拒絕了進口商團體針對「中國 Section 301 懲罰性關稅」提起的上訴與司法覆審。這項最終裁決確立了美國政府對自中國進口的各類紡織面料與原材料徵收高額 301 關稅的合法性，意味著跨國採購的關稅成本壁壘已正式常態化。
-</p>
-<div class="flex justify-between items-center text-[11px] text-slate-500 border-t border-slate-100 pt-3">
-<span>來源: <strong class="text-slate-700">Fibre2Fashion (美國 United States)</strong></span>
-<a href="https://www.fibre2fashion.com/news/textile-news/brexit-impact-wrose-than-expected-for-26-of-uk-mid-sized-firms-bdo-311045-newsdetails.htm" target="_blank" class="text-indigo-600 hover:underline flex items-center">
-查看原文 <i class="fa-solid fa-arrow-up-right-from-square ml-1 text-[10px]"></i>
-</a>
-</div>
-</div>
-</div>
+                <!-- Pagination Controls -->
+                <div class="flex items-center justify-between border-t border-bordergold pt-4 px-6 text-sm">
+                    <button onclick="flipPagePrev()" class="px-4 py-2 bg-warmgray text-neutral-700 rounded hover:bg-neutral-200 font-bold transition-all disabled:opacity-30 disabled:pointer-events-none">
+                        <i class="fa-solid fa-arrow-left mr-2"></i>上一折疊面
+                    </button>
+                    <span id="book-page-num" class="font-serif font-bold text-neutral-500">第 1 / 4 頁組</span>
+                    <button onclick="flipPageNext()" class="px-4 py-2 bg-warmgray text-neutral-700 rounded hover:bg-neutral-200 font-bold transition-all disabled:opacity-30 disabled:pointer-events-none">
+                        下一折疊面<i class="fa-solid fa-arrow-right ml-2"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
 
-<div class="news-card bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden" data-category="brand-retail">
-<div class="p-5">
-<div class="flex justify-between items-start mb-3">
-<span class="bg-indigo-50 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded">ESG 政策</span>
-<span class="text-[11px] text-slate-400 font-mono">4小時前</span>
-</div>
-<h3 class="text-sm font-bold text-slate-900 mb-2 leading-snug hover:text-indigo-600 cursor-pointer">
-【品牌】奢侈品牌氣候政策重大倒退？Burberry 宣佈將「淨零碳排放承諾期限」向後推遲 10 年
-</h3>
-<p class="text-xs text-slate-600 mb-4 leading-relaxed">
-英國奢侈品牌大廠 Burberry 在其最新發布的氣候轉型策略中，坦言原定 2039/40 會計年度的「淨零碳排」承諾因長尾供應鏈可追溯性成本過高、低碳能源轉型進度滯後，在當前市場疲軟下已非商業能承受。該公司宣布將淨零期限向後延遲 10 年，調整至 2049/50。
-</p>
-<div class="flex justify-between items-center text-[11px] text-slate-500 border-t border-slate-100 pt-3">
-<span>來源: <strong class="text-slate-700">EcoTextile News (英國 UK)</strong></span>
-<a href="https://muckrack.com/john-mowbray-1/articles" target="_blank" class="text-indigo-600 hover:underline flex items-center">
-查看驗證摘要 <i class="fa-solid fa-arrow-up-right-from-square ml-1 text-[10px]"></i>
-</a>
-</div>
-</div>
-</div>
+        <!-- ==================== View 3: 排版與去重引擎後台 (Engine Workbench) ==================== -->
+        <div id="view-engine" class="hidden flex-col gap-6">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Left: Duplo Engine Controls & Scoring -->
+                <div class="bg-paper border border-bordergold rounded-lg p-6 shadow-sm flex flex-col gap-4">
+                    <div>
+                        <h2 class="text-lg font-bold font-serif text-ink flex items-center gap-2">
+                            <i class="fa-solid fa-gears text-indigo-600"></i>
+                            Flipboard Duplo 智能排版調度盤
+                        </h2>
+                        <p class="text-xs text-neutral-500 mt-1">
+                            模擬美學能量優化算法: $$E = w_1 \cdot C_{\text{intrusion}} + w_2 \cdot U_{\text{waste}} + w_3 \cdot M_{\text{mismatch}}$$
+                        </p>
+                    </div>
 
-<div class="news-card bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden" data-category="brand-retail">
-<div class="p-5">
-<div class="flex justify-between items-start mb-3">
-<span class="bg-indigo-50 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded">世界盃經濟</span>
-<span class="text-[11px] text-slate-400 font-mono">5小時前</span>
-</div>
-<h3 class="text-sm font-bold text-slate-900 mb-2 leading-snug hover:text-indigo-600 cursor-pointer">
-【品牌】2026 美加墨世界盃啟動綠色革命！Nike、Puma、Adidas 爭相推出 100% 舊衣化學回收聚酯球衣
-</h3>
-<p class="text-xs text-slate-600 mb-4 leading-relaxed">
-2026 年 FIFA 世界盃正成為舊衣服回收市場最強引擎。本屆賽事多達 75% 國家隊球衣採用再生聚酯。Nike 全新 Aero-Fit 技術為巴西、英格蘭及法國等 12 隊打造 100% 舊衣服回收面料；Puma 則透過 Re.program 回收 unsold 產品，使高達 95% 聚酯來自紡織廢料，引領產業跨越規模化門檻。
-</p>
-<div class="flex justify-between items-center text-[11px] text-slate-500 border-t border-slate-100 pt-3">
-<span>來源: <strong class="text-slate-700">BOF / Plastics News (加拿大 Vancouver / 美國 US)</strong></span>
-<a href="https://logos-pres.md/en/news/the-2026-world-cup-could-be-a-driver-for-the-textile-recycling-market/" target="_blank" class="text-indigo-600 hover:underline flex items-center">
-查看原文 <i class="fa-solid fa-arrow-up-right-from-square ml-1 text-[10px]"></i>
-</a>
-</div>
-</div>
-</div>
+                    <!-- Layout Optimization Weights Sliders -->
+                    <div class="bg-warmgray p-4 rounded border border-neutral-200 flex flex-col gap-4 text-xs font-bold">
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span>文字與圖片重疊干擾成本偏好 ($w_1$)</span>
+                                <span id="weight-w1-val" class="text-indigo-600">0.45</span>
+                            </div>
+                            <input oninput="updateEngineWeights()" id="slider-w1" type="range" min="0" max="1" step="0.05" value="0.45" class="w-full h-1.5 bg-neutral-300 rounded-lg appearance-none cursor-pointer">
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span>空白版面浪費懲罰權重 ($w_2$)</span>
+                                <span id="weight-w2-val" class="text-indigo-600">0.30</span>
+                            </div>
+                            <input oninput="updateEngineWeights()" id="slider-w2" type="range" min="0" max="1" step="0.05" value="0.30" class="w-full h-1.5 bg-neutral-300 rounded-lg appearance-none cursor-pointer">
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span>情報權威與版面比例配對誤差 ($w_3$)</span>
+                                <span id="weight-w3-val" class="text-indigo-600">0.25</span>
+                            </div>
+                            <input oninput="updateEngineWeights()" id="slider-w3" type="range" min="0" max="1" step="0.05" value="0.25" class="w-full h-1.5 bg-neutral-300 rounded-lg appearance-none cursor-pointer">
+                        </div>
+                    </div>
 
-<div class="news-card bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden" data-category="brand-retail">
-<div class="p-5">
-<div class="flex justify-between items-start mb-3">
-<span class="bg-indigo-50 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded">零售業績</span>
-<span class="text-[11px] text-slate-400 font-mono">6小時前</span>
-</div>
-<h3 class="text-sm font-bold text-slate-900 mb-2 leading-snug hover:text-indigo-600 cursor-pointer">
-【財報】「跑步經濟」大爆發！日本 Asics Q1 營收狂飆 30%，瑞士 On 昂跑創單季 8 億瑞郎新高歷史紀錄
-</h3>
-<p class="text-xs text-slate-600 mb-4 leading-relaxed">
-運動零售市場邁入「專業運動 × 時尚生活」新紀元。日本 Asics 2026 年 Q1 營收達 2,702 億日圓，旗下潮流品牌鬼塚虎 (Onitsuka Tiger) 暴漲 33.8% 並在台北微風南山開出亞洲首家概念旗艦店。同時，瑞士 On Holding 靠全價策略與直營營收大增，單季突破 8.3 億瑞郎，亞太市場狂飆 44.4%。
-</p>
-<div class="flex justify-between items-center text-[11px] text-slate-500 border-t border-slate-100 pt-3">
-<span>來源: <strong class="text-slate-700">時髦經濟 (台灣 Taiwan) / 國際紡織論壇報</strong></span>
-<a href="https://muckrack.com/john-mowbray-1/articles" target="_blank" class="text-indigo-600 hover:underline flex items-center">
-查看原文 <i class="fa-solid fa-arrow-up-right-from-square ml-1 text-[10px]"></i>
-</a>
-</div>
-</div>
-</div>
+                    <div class="flex items-center justify-between border-t border-neutral-100 pt-4">
+                        <div class="text-xs">
+                            <span class="text-neutral-500">當前排版優化損失能量 ($E$):</span>
+                            <span id="current-energy-score" class="font-mono text-lg font-black text-red-600 ml-1">0.142</span>
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="optimizeLayoutAnimation()" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-4 py-2 rounded shadow transition-all">
+                                <i class="fa-solid fa-bolt mr-1"></i>執行最優權重分支定界剪枝
+                            </button>
+                        </div>
+                    </div>
 
-<div class="news-card bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden" data-category="brand-retail">
-<div class="p-5">
-<div class="flex justify-between items-start mb-3">
-<span class="bg-indigo-50 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded">零售科技</span>
-<span class="text-[11px] text-slate-400 font-mono">7小時前</span>
-</div>
-<h3 class="text-sm font-bold text-slate-900 mb-2 leading-snug hover:text-indigo-600 cursor-pointer">
-【品牌】輕奢巨頭 Tapestry 為其自主研發 AI 導購與趨勢預測平台 "Mira" 取得美國專利
-</h3>
-<p class="text-xs text-slate-600 mb-4 leading-relaxed">
-Coach 與 Kate Spade 母公司 Tapestry 宣布，其內部研發的生成式 AI 平台 "Mira" 已成功獲取美國專利。Mira 能夠整合全球庫存數據、歷史銷售走勢與消費者在線搜尋偏好，協助設計與行銷團隊提早捕捉流行趨勢，優化庫存管理，並將產品上市天數縮短達數週。
-</p>
-<div class="flex justify-between items-center text-[11px] text-slate-500 border-t border-slate-100 pt-3">
-<span>來源: <strong class="text-slate-700">EcoTextile News (美國 US)</strong></span>
-<a href="https://muckrack.com/john-mowbray-1/articles" target="_blank" class="text-indigo-600 hover:underline flex items-center">
-查看原文存檔 <i class="fa-solid fa-arrow-up-right-from-square ml-1 text-[10px]"></i>
-</a>
-</div>
-</div>
-</div>
+                    <!-- Simulated Dynamic Terminal for Cralwer Activity -->
+                    <div class="flex flex-col gap-2 mt-2">
+                        <span class="text-xs text-neutral-400 font-bold uppercase tracking-wider">實時分布式高可用抓取調度日誌 (ZooKeeper 集群狀態: Leader)</span>
+                        <div class="bg-neutral-900 text-green-400 font-mono text-[11px] p-3 rounded h-[180px] overflow-y-auto no-scrollbar" id="crawler-terminal-log">
+                            <!-- Live logs appear here -->
+                        </div>
+                    </div>
+                </div>
 
-<div class="news-card bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden" data-category="brand-retail">
-<div class="p-5">
-<div class="flex justify-between items-start mb-3">
-<span class="bg-indigo-50 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded">瑜珈龍頭</span>
-<span class="text-[11px] text-slate-400 font-mono">8小時前</span>
-</div>
-<h3 class="text-sm font-bold text-slate-900 mb-2 leading-snug hover:text-indigo-600 cursor-pointer">
-【財報】Lululemon 第一季度營收穩增 6% 至 36.4 億美元，大中華區表現冠絕全球暴漲 28%
-</h3>
-<p class="text-xs text-slate-600 mb-4 leading-relaxed">
-截至 2026 年第一季度，Lululemon 全球營收錄得 36.4 億美元。儘管北美本土市場需求面臨軟著陸考驗，但大中華區 (Greater China) 以高達 28% 的成長率成為集團最核心的增長引擎。依品類來看，女性服飾、男性服飾及配件袋包分別穩定增長 7%、3% 與 4%，集團總市值穩站 140 億美元。
-</p>
-<div class="flex justify-between items-center text-[11px] text-slate-500 border-t border-slate-100 pt-3">
-<span>來源: <strong class="text-slate-700">時髦經濟 (台灣 Taiwan) / Lululemon Q1 財報</strong></span>
-<a href="https://muckrack.com/john-mowbray-1/articles" target="_blank" class="text-indigo-600 hover:underline flex items-center">
-查看原文存檔 <i class="fa-solid fa-arrow-up-right-from-square ml-1 text-[10px]"></i>
-</a>
-</div>
-</div>
-</div>
+                <!-- Right: Deduplication Star-Contraction Graph Visualizer -->
+                <div class="bg-paper border border-bordergold rounded-lg p-6 shadow-sm flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-center">
+                            <h2 class="text-lg font-bold font-serif text-ink flex items-center gap-2">
+                                <i class="fa-solid fa-diagram-project text-teal-600"></i>
+                                多軌情報去重與折疊引擎
+                            </h2>
+                            <span class="bg-teal-100 text-teal-800 text-[10px] font-bold px-2 py-0.5 rounded">MinHash + LSH + Star-Contraction</span>
+                        </div>
+                        <p class="text-xs text-neutral-500 mt-1">
+                            展示原始情報關聯圖，透過 $\text{Jaccard } J(A,B) \ge 0.82$ 建立關聯邊，交替運行 Large-Star 與 Small-Star 圖收縮聚類，將轉載新聞完美歸併折疊。
+                        </p>
+                    </div>
 
-<div class="news-card bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden" data-category="intl-politics">
-<div class="p-5">
-<div class="flex justify-between items-start mb-3">
-<span class="bg-blue-50 text-blue-700 text-xs font-bold px-2.5 py-1 rounded">貿易轉移</span>
-<span class="text-[11px] text-slate-400 font-mono">9小時前</span>
-</div>
-<h3 class="text-sm font-bold text-slate-900 mb-2 leading-snug hover:text-indigo-600 cursor-pointer">
-【貿易】美服裝採購地圖加速重組！對華及南亞進口跌超 14%，「非亞洲與西半球」份額創 31.3% 新高
-</h3>
-<p class="text-xs text-slate-600 mb-4 leading-relaxed">
-根據美國服裝進口最新統計，雖然美國整體進口服裝總額下滑 10.1%，但進口地圖去中心化特徵顯著：非亞洲及西半球 (Outside-Asia-and-Western-Hemisphere) 的採購份額在 4 月底飆升至 31.3% 的歷史最高點。其中，中國 Q1 輸美總額跌 14.4% 至 30.3 億美元，印度輸美亦跌 13.5% 至 11.5 億美元。
-</p>
-<div class="flex justify-between items-center text-[11px] text-slate-500 border-t border-slate-100 pt-3">
-<span>來源: <strong class="text-slate-700">Fibre2Fashion (美國 United States) / USTR</strong></span>
-<a href="https://www.fibre2fashion.com/news/apparel-news/us-apparel-sourcing-shifts-beyond-asia-americas-in-2-6-bn-third-map-310992-newsdetails.htm" target="_blank" class="text-indigo-600 hover:underline flex items-center">
-查看原文 <i class="fa-solid fa-arrow-up-right-from-square ml-1 text-[10px]"></i>
-</a>
-</div>
-</div>
-</div>
+                    <!-- Interactive deduplication Graph -->
+                    <div class="border border-neutral-200 rounded my-4 relative bg-warmgray overflow-hidden h-[260px] flex items-center justify-center">
+                        <div class="absolute top-2 left-2 flex gap-1 z-10">
+                            <button onclick="stepDeduplicationAlgorithm()" id="btn-dedup-step" class="text-[10px] font-bold bg-ink text-paper px-2.5 py-1 rounded shadow-sm hover:bg-neutral-800">
+                                交替進行 Star 圖收縮
+                            </button>
+                            <button onclick="resetDeduplicationGraph()" class="text-[10px] font-bold bg-neutral-300 text-neutral-700 px-2.5 py-1 rounded shadow-sm hover:bg-neutral-400">
+                                重設網絡
+                            </button>
+                        </div>
+                        <div class="absolute bottom-2 right-2 text-[10px] font-mono text-neutral-400" id="dedup-algo-status">
+                            圖狀態: 初始零散情報 (11個節點, 7條相似邊)
+                        </div>
 
-<div class="news-card bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden" data-category="intl-politics">
-<div class="p-5">
-<div class="flex justify-between items-start mb-3">
-<span class="bg-blue-50 text-blue-700 text-xs font-bold px-2.5 py-1 rounded">北美貿易</span>
-<span class="text-[11px] text-slate-400 font-mono">10小時前</span>
-</div>
-<h3 class="text-sm font-bold text-slate-900 mb-2 leading-snug hover:text-indigo-600 cursor-pointer">
-【地緣】美加墨協定 USMCA 續簽爆出考驗！墨西哥女總統 Claudia Sheinbaum 表態願與川普對談捍衛自貿
-</h3>
-<p class="text-xs text-slate-600 mb-4 leading-relaxed">
-針對美國前總統川普近期質疑《美加墨協定》(USMCA) 續簽必要性的言論，墨西哥 (Mexico) 總統 Claudia Sheinbaum 發表聲明，表態已準備好與川普磋商，強調該自貿協定能同時造福三國。墨西哥目前正尋求降低美方對墨實施的鋼鐵、鋁和汽車高額關稅，但美方「本土製造」保護主義立場使談判充滿挑戰。
-</p>
-<div class="flex justify-between items-center text-[11px] text-slate-500 border-t border-slate-100 pt-3">
-<span>來源: <strong class="text-slate-700">Fibre2Fashion (墨西哥 Mexico)</strong></span>
-<a href="https://www.fibre2fashion.com/news/textile-news/mexican-prez-willing-to-discuss-merits-of-usmca-with-trump-if-needed-311068-newsdetails.htm" target="_blank" class="text-indigo-600 hover:underline flex items-center">
-查看原文 <i class="fa-solid fa-arrow-up-right-from-square ml-1 text-[10px]"></i>
-</a>
-</div>
-</div>
-</div>
+                        <!-- SVG Graph Render Canvas -->
+                        <svg id="dedup-svg-canvas" class="w-full h-full">
+                            <!-- Lines and nodes populated here dynamically -->
+                        </svg>
+                    </div>
 
-<div class="news-card bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden" data-category="intl-politics">
-<div class="p-5">
-<div class="flex justify-between items-start mb-3">
-<span class="bg-blue-50 text-blue-700 text-xs font-bold px-2.5 py-1 rounded">台廠佈局</span>
-<span class="text-[11px] text-slate-400 font-mono">11小時前</span>
-</div>
-<h3 class="text-sm font-bold text-slate-900 mb-2 leading-snug hover:text-indigo-600 cursor-pointer">
-【台廠】全球去中心化策略收效！成衣大廠振大環球大舉擴展越南與印尼二成產能
-</h3>
-<p class="text-xs text-slate-600 mb-4 leading-relaxed">
-隨著對等關稅與貿易轉移影響，台廠對 2026 年營運轉趨樂觀。成衣大廠振大環球 (Chen-Ta Global) 因應美國品牌客戶快速拉貨與分散地緣風險的趨勢，積極於越南 (Vietnam) 與印尼 (Indonesia) 兩大生產重鎮擴充產線，預計 2026 年整體成衣產能將提升至少兩成，強化抗政治風險與對等關稅能力。
-</p>
-<div class="flex justify-between items-center text-[11px] text-slate-500 border-t border-slate-100 pt-3">
-<span>來源: <strong class="text-slate-700">經濟部 紡織產業推動計畫 (台灣 Taiwan)</strong></span>
-<a href="https://www.textilesinfo.tw/mod/news/index.php?REQUEST_ID=75d9f35204bd83598ebc3de0e835f5a541cae8a1cacf6685e50241eeead4e32f" target="_blank" class="text-indigo-600 hover:underline flex items-center">
-查看原文 <i class="fa-solid fa-arrow-up-right-from-square ml-1 text-[10px]"></i>
-</a>
-</div>
-</div>
-</div>
+                    <!-- Metrics summary -->
+                    <div class="grid grid-cols-3 gap-2 text-center text-xs">
+                        <div class="bg-warmgray p-2.5 rounded border border-neutral-100">
+                            <p class="text-neutral-400 font-bold scale-90">原始抓取情報</p>
+                            <p class="text-lg font-black font-mono mt-1" id="stat-raw">11 篇</p>
+                        </div>
+                        <div class="bg-warmgray p-2.5 rounded border border-neutral-100">
+                            <p class="text-neutral-400 font-bold scale-90">折疊精簡後</p>
+                            <p class="text-lg font-black font-mono text-teal-600 mt-1" id="stat-curated">7 篇</p>
+                        </div>
+                        <div class="bg-warmgray p-2.5 rounded border border-neutral-100">
+                            <p class="text-neutral-400 font-bold scale-90">節省頻寬與算力</p>
+                            <p class="text-lg font-black font-mono text-emerald-600 mt-1" id="stat-saved">36.3%</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-<div class="news-card bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden" data-category="tech-equip">
-<div class="p-5">
-<div class="flex justify-between items-start mb-3">
-<span class="bg-emerald-50 text-emerald-700 text-xs font-bold px-2.5 py-1 rounded">節能染整</span>
-<span class="text-[11px] text-slate-400 font-mono">12小時前</span>
-</div>
-<h3 class="text-sm font-bold text-slate-900 mb-2 leading-snug hover:text-indigo-600 cursor-pointer">
-【染整】瑞典 imogo 於 ITM 2026 震撼展示 Dye-Max 噴霧染色技術，成功節水與節能 90%
-</h3>
-<p class="text-xs text-slate-600 mb-4 leading-relaxed">
-瑞典 (Sweden) 新創 imogo 在土耳其 ITM 2026 展出 Dye-Max 噴霧染色技術。該系統成功落戶孟加拉 H&M 核心供應商，憑藉極低的「0.5公升/公斤面料」超低浴比，比傳統高溫高壓溢流染色減少高達 90% 的用水量與 90% 能耗，並使化學助劑排放大幅降低，僅需 20 公升水即可完成換色沖洗。
-</p>
-<div class="flex justify-between items-center text-[11px] text-slate-500 border-t border-slate-100 pt-3">
-<span>來源: <strong class="text-slate-700">Textile World (瑞典 Sweden)</strong></span>
-<a href="https://www.textileworld.com/textile-world/2026/05/sweden-targets-turkiyes-textile-future-at-itm-2026/" target="_blank" class="text-indigo-600 hover:underline flex items-center">
-查看原文 <i class="fa-solid fa-arrow-up-right-from-square ml-1 text-[10px]"></i>
-</a>
-</div>
-</div>
-</div>
+    </main>
 
-<div class="news-card bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden" data-category="tech-equip">
-<div class="p-5">
-<div class="flex justify-between items-start mb-3">
-<span class="bg-emerald-50 text-emerald-700 text-xs font-bold px-2.5 py-1 rounded">化學回收</span>
-<span class="text-[11px] text-slate-400 font-mono">13小時前</span>
-</div>
-<h3 class="text-sm font-bold text-slate-900 mb-2 leading-snug hover:text-indigo-600 cursor-pointer">
-【回收】遠東新世紀 (FENC) TopGreen® ChemCycle 專利工藝，打通 L2L 與 F2F 商業化循環
-</h3>
-<p class="text-xs text-slate-600 mb-4 leading-relaxed">
-針對台灣每年近 7 萬噸廢舊紡織品、高達 85% 因混紡和印塗料被迫焚燒的瓶頸，遠東新世紀 (FENC) 運用其專利的 TopGreen® ChemCycle 化學解聚工藝，透過溫和的分子級解聚路徑，將舊衣服與鞋材還原為與原始石化料品質一致的 rPTA。目前已與可口可樂、IKEA 等大廠合作落實「Label to Label」與「Fabric to Fabric」商業化全閉環循環。
-</p>
-<div class="flex justify-between items-center text-[11px] text-slate-500 border-t border-slate-100 pt-3">
-<span>來源: <strong class="text-slate-700">遠東新世紀 (台灣 Taiwan) / 中華民國經濟部</strong></span>
-<a href="https://www.textilesinfo.tw/mod/news/index.php" target="_blank" class="text-indigo-600 hover:underline flex items-center">
-查看研究報告 <i class="fa-solid fa-arrow-up-right-from-square ml-1 text-[10px]"></i>
-</a>
-</div>
-</div>
-</div>
+    <!-- 底部版權 -->
+    <footer class="border-t border-bordergold bg-paper py-6 text-center text-xs text-neutral-400 mt-12">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-4">
+            <p>© 2026 每日紡織化纖情報智庫網頁平台. 專為周家旭主管訂製.</p>
+            <p class="font-mono text-[10px] text-neutral-400">Flipboard Duplo Layout System • Node.js Readability • Star-Contraction Deduplication</p>
+        </div>
+    </footer>
 
-<div class="news-card bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden" data-category="tech-equip">
-<div class="p-5">
-<div class="flex justify-between items-start mb-3">
-<span class="bg-emerald-50 text-emerald-700 text-xs font-bold px-2.5 py-1 rounded">3D 織造</span>
-<span class="text-[11px] text-slate-400 font-mono">14小時前</span>
-</div>
-<h3 class="text-sm font-bold text-slate-900 mb-2 leading-snug hover:text-indigo-600 cursor-pointer">
-【製程】3D 數位織造革命！美國 unspun 推出 3D 直織無縫工藝，大幅削減 20%-30% 布料裁損
-</h3>
-<p class="text-xs text-slate-600 mb-4 leading-relaxed">
-時尚科技先驅 unspun 推出革命性的 3D 數位直織設備。該設備繞過了傳統紡織中的梭織、打版、剪裁與成衣廠縫紉等多重繁瑣工序，直接由電腦數位指令控制，在單台機器中將紗線一體成型為高機能長褲。這項創新為戶外機能品牌減少了 20% 到 30% 的傳統面料裁剪浪費，提供極具彈性的 Flexible MOQ。
-</p>
-<div class="flex justify-between items-center text-[11px] text-slate-500 border-t border-slate-100 pt-3">
-<span>來源: <strong class="text-slate-700">Textile World (美國 US)</strong></span>
-<a href="https://www.textileworld.com/textile-world/2026/05/unspun-3d-weaving-technology" target="_blank" class="text-indigo-600 hover:underline flex items-center">
-查看原文 <i class="fa-solid fa-arrow-up-right-from-square ml-1 text-[10px]"></i>
-</a>
-</div>
-</div>
-</div>
+    <!-- ==================== UI Overlay: Reader Mode (雙軌切換之極簡閱讀器視圖) ==================== -->
+    <div id="reader-view-overlay" class="fixed inset-0 bg-neutral-950/40 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-paper w-full max-w-3xl h-[85vh] rounded-lg shadow-2xl border border-bordergold flex flex-col overflow-hidden animate-slide-up paper-texture">
+            <!-- Reader header controls -->
+            <div class="flex items-center justify-between border-b border-bordergold py-3.5 px-6 bg-warmgray/60">
+                <span class="text-xs font-bold font-serif uppercase tracking-widest text-neutral-500">
+                    <i class="fa-solid fa-book-open mr-1"></i> 極致紙質屏讀器 (Reader Mode)
+                </span>
+                <div class="flex items-center gap-2">
+                    <button onclick="toggleReaderFont()" class="text-xs font-bold bg-neutral-200 text-neutral-700 px-3 py-1 rounded hover:bg-neutral-300">
+                        切換為無襯線體
+                    </button>
+                    <button onclick="closeReaderMode()" class="text-neutral-500 hover:text-neutral-800 text-lg p-1.5 transition-all">
+                        <i class="fa-solid fa-circle-xmark"></i>
+                    </button>
+                </div>
+            </div>
+            <!-- Reader Body -->
+            <div class="flex-grow overflow-y-auto p-8 md:p-12 no-scrollbar" id="reader-content-area">
+                <!-- Filled dynamically by reader view renderer -->
+            </div>
+        </div>
+    </div>
 
-<div class="news-card bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden" data-category="tech-equip">
-<div class="p-5">
-<div class="flex justify-between items-start mb-3">
-<span class="bg-emerald-50 text-emerald-700 text-xs font-bold px-2.5 py-1 rounded">生物材料</span>
-<span class="text-[11px] text-slate-400 font-mono">15小時前</span>
-</div>
-<h3 class="text-sm font-bold text-slate-900 mb-2 leading-snug hover:text-indigo-600 cursor-pointer">
-【創新】Bezos 地球基金注資 3,400 萬美元，加速實驗室細胞培養棉、替代纖維商業化
-</h3>
-<p class="text-xs text-slate-600 mb-4 leading-relaxed">
-Bezos 地球基金 (Bezos Earth Fund) 宣布撥款 3,400 萬美元，資助頂尖生物技術實驗室與初創企業，專注解決實驗室細胞培養棉花、蠶絲以及非木質替代纖維的規模化量產瓶頸。此資金旨在克服生物合成纖維在水噴織機與智慧傳感器上的加工障礙，使其能在無土地水消耗下，達到天然棉的物理機械強度，順應歐盟 DPP 數位產品護照之嚴格要求。
-</p>
-<div class="flex justify-between items-center text-[11px] text-slate-500 border-t border-slate-100 pt-3">
-<span>來源: <strong class="text-slate-700">Textile ETP (歐洲 Europe)</strong></span>
-<a href="https://www.textileworld.com" target="_blank" class="text-indigo-600 hover:underline flex items-center">
-查看研究細節 <i class="fa-solid fa-arrow-up-right-from-square ml-1 text-[10px]"></i>
-</a>
-</div>
-</div>
-</div>
-
-<div class="news-card bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden" data-category="tech-equip">
-<div class="p-5">
-<div class="flex justify-between items-start mb-3">
-<span class="bg-emerald-50 text-emerald-700 text-xs font-bold px-2.5 py-1 rounded">化學回收</span>
-<span class="text-[11px] text-slate-400 font-mono">16小時前</span>
-</div>
-<h3 class="text-sm font-bold text-slate-900 mb-2 leading-snug hover:text-indigo-600 cursor-pointer">
-【回收】加拿大 Denovia 化學回收平台 "The Ark" 邁入商業量產，複合混紡面料還原達 98.3% 高純度單體
-</h3>
-<p class="text-xs text-slate-600 mb-4 leading-relaxed">
-Denovia 宣布其位於溫哥華 (Vancouver) 的貨櫃式解聚示範單元 "The Ark" 邁入下一階段商業量產部署。最新第三方獨立認證指出，該化學回收平台能在低溫低壓環境下，將含有大量聚氨酯 (PU) 與雜質的複合混紡廢舊紡織品快速降解，並取得結晶度達 98.3% 的超純度對苯二甲酸 (PTA) 單體。
-</p>
-<div class="flex justify-between items-center text-[11px] text-slate-500 border-t border-slate-100 pt-3">
-<span>來源: <strong class="text-slate-700">Textile World (加拿大 Canada)</strong></span>
-<a href="https://www.textileworld.com/textile-world/fiber-world/2026/06/denovia-advances-the-ark-from-launch-to-commercial-scale-up-targeting-the-trillion-dollar-plastic-and-textile-waste-opportunity/" target="_blank" class="text-indigo-600 hover:underline flex items-center">
-查看原文 <i class="fa-solid fa-arrow-up-right-from-square ml-1 text-[10px]"></i>
-</a>
-</div>
-</div>
-</div>
+    <!-- ==================== UI Overlay: Toast Alerts ==================== -->
+    <div id="toast-container" class="fixed bottom-6 right-6 z-50 flex flex-col gap-2 pointer-events-none">
+        <!-- Toast popups -->
+    </div>
 
 </div>
-</main>
 
-<footer class="bg-slate-900 text-slate-400 py-8 border-t border-slate-800 text-center text-xs">
-<div class="container mx-auto px-4">
-<p class="mb-2">全球紡織化纖決策日報 • 決策者決戰終端 © 2026. All Rights Reserved.</p>
-<p class="max-w-xl mx-auto leading-relaxed text-slate-500">本系統每 3 小時自動執行網路爬蟲，徹底濾除發布超過 24 小時之舊聞，並使用機器學習排重與人工高階決策加值，提供台灣與全球經營決策、業務開拓、品牌行銷與技術研發主管最精準的每日情報。</p>
-</div>
-</footer>
-
+<!-- APP STATE AND DATA LOGIC -->
 <script>
-// 1. 初始化走勢圖數據 (實際 2026 年 6 月 12 日至 6 月 17 日數據)
-const chartDataSets = {
-wti: {
-label: '紐約 WTI 原油 (USD/桶)',
-borderColor: '#ef4444',
-backgroundColor: 'rgba(239, 68, 68, 0.1)',
-data: [78.50, 77.20, 76.80, 75.90, 74.50, 74.35]
-},
-brent: {
-label: '倫敦 Brent 原油 (USD/桶)',
-borderColor: '#f43f5e',
-backgroundColor: 'rgba(244, 63, 94, 0.1)',
-data: [81.20, 80.10, 79.50, 78.80, 77.40, 77.24]
-},
-pta: {
-label: '華東 PTA 現貨 (RMB/噸)',
-borderColor: '#6366f1',
-backgroundColor: 'rgba(99, 102, 241, 0.1)',
-data: 
-},
-meg: {
-label: '乙二醇 MEG 內盤 (RMB/噸)',
-borderColor: '#10b981',
-backgroundColor: 'rgba(16, 185, 129, 0.1)',
-data: 
-},
-cotton: {
-label: '美棉 ICE 12月合約 (USDc/磅)',
-borderColor: '#8b5cf6',
-backgroundColor: 'rgba(139, 92, 246, 0.1)',
-data: [75.40, 75.90, 76.50, 77.60, 77.90, 79.22]
-}
-};
+    // ==================== A. 數據定義與儲存架構 (Mocking database elements) ====================
+    let rawArticles = [
+        {
+            id: 'art-1',
+            category: 'rd',
+            title: '瑞典RISE研究所突破超臨界二氧物理/化學無水回收棉聚酯混紡織物工藝',
+            source: 'RISE 研究所',
+            summary: '新型製程利用超臨界流體狀態提取分離棉與聚酯。突破性地保留聚酯纖維微觀結晶完整度，無需高成本高耗能的化學解聚聚合，大幅下修循環碳足跡。',
+            content: `<h3>瑞典 RISE 研究所與 KTH 皇家理工團隊合作</h3>
+                      <p>全球每年有數千萬噸紡織廢料因混紡難以拆解而淪入焚化爐。團隊利用超臨界二氧化碳無水流體，建立起獨特的棉-聚酯結晶選擇性溶解分離工藝。</p>
+                      <p>在製程中，為達到最優的分離相態，關鍵超臨界流體臨界壓力比比值 $\ P_r = \frac{P}{P_c} \ $ 與對應溫度臨界比 $\ T_r = \frac{T}{T_c} \ $ 的計算模型關係如下：</p>
+                      <div class="latex-container my-6 p-4 bg-warmgray rounded border text-center font-serif text-lg">
+                          $$P_r = \frac{P}{P_c}, \quad T_r = \frac{T}{T_c}$$
+                      </div>
+                      <p>其中，當超臨界壓力達特定相態時，棉纖維的天然纖維素與聚酯大分子結晶能被物理切割並在不同的冷凝降壓塔中析出。測試數據顯示，再生聚酯分子的極限抗拉強度達到 $\ 320 \text{ MPa} \ $，保持了母體材料的96%力學屬性，而整個製程中的二氧化碳回收率高達 $\ 99.2\% \ $。</p>`,
+            imageUrl: '',
+            trustScore: 0.95,
+            metrics: {
+                "二氧化碳回收": "99.2%",
+                "抗拉強度保持": "96%",
+                "染色牢度 (AATCC)": "4-5 級"
+            },
+            formulas: ["P_r = \\frac{P}{P_c}", "T_r = \\frac{T}{T_c}"],
+            tags: ['#超臨界二氧化碳', '#物理分離', '#棉聚酯混紡', '#製程創新']
+        },
+        {
+            id: 'art-2',
+            category: 'trend',
+            title: 'WGSN A/W 27/28 趨勢指標「未來黃昏色 Future Dusk」引發機能面料防污染工藝變革',
+            source: 'WGSN Fashion Design',
+            summary: '預測結合深紫色與冷靛藍調的「Future Dusk」將成為 2027 秋冬主色調。該色彩在高度反光的「三葉異形絲」上呈現星際極光質感，推動機能防水塗層進化。',
+            content: `<h3>WGSN 聯手 Heuritech 透過社群與秀場大數據交叉解析</h3>
+                      <p>預測未來主色調「Future Dusk」融合深邃夜空紫與星光偏光，將在機能型戶外服飾、反光科技防寒外套中引爆市場偏好。這種獨特的雙色偏光質感，極為依賴三葉異形絲（Tri-lobed yarn）的異形折射原理。</p>
+                      <p>然而，這對下游染整廠帶來兩大新挑戰：首先是三葉異形絲表面積較大，容易殘留染色助劑造成污染；其次是品牌要求在 Future Dusk 機能面料上全面淘汰傳統 C6 全氟防水劑，轉向更環保的無氟防水接枝技術。</p>`,
+            imageUrl: '',
+            trustScore: 0.92,
+            palette: ['#221436', '#3b1c5c', '#7c3f58', '#a93226', '#f39c12'],
+            tags: ['#未來黃昏色', '#三葉異形絲', '#無氟防水塗層', '#WGSN預測']
+        },
+        {
+            id: 'art-3',
+            category: 'regulation',
+            title: '美國最高法院廢除 IEEPA，政府即刻啟動「Section 122」對全球紡織品追加 10% 臨時關稅',
+            source: '美國 ITC 官網',
+            summary: '最高法院判定 IEEPA 關稅越權後，宣布開啟 1,660 億美元退稅通道，但為補關稅真空，白宮火速動用《1974年貿易法》第122條對全球追加10%臨時統一關稅，中國綜合關稅將堆疊至驚人的 44%。',
+            content: `<h3>關稅結構百年罕見震盪</h3>
+                      <p>2026 年 2 月 20 日，美國最高法院判定先前基於《國際緊急經濟權力法》（IEEPA）徵收的互惠關稅違憲。然而在 2 月 24 日，為避免財政關稅真空，美國政府宣布依據「Section 122」自 2026 年 3 月 1 日起，對全球進口紡織品徵收額外 10% 臨時關稅，預計執行至 7 月底。</p>
+                      <p>此舉導致各國關稅重新堆疊：中國化纖產品因 Section 301（25%）+ 基礎稅（9%）+ Section 122（10%）疊加，綜合關稅暴增至 44%。而越南、印度因原高額 IEEPA 關稅瓦解，關稅降至 19%，一夜間出口價格優勢奪回，推動全球供應鏈急速洗牌。</p>`,
+            imageUrl: '',
+            trustScore: 0.98,
+            tariffImpact: {
+                "基礎稅率": "9%",
+                "Section 301 (針對中國)": "25%",
+                "Section 122 (臨時關稅)": "10%",
+                "中國綜合累進關稅": "44%"
+            },
+            tags: ['#臨時關稅', '#關稅堆疊', '#供應鏈轉移', '#Section122']
+        },
+        {
+            id: 'art-4',
+            category: 'regulation',
+            title: '加州 AB 1817 法案 50 ppm TOF 檢測新規：強制歐盟 EN 17681-1:2025 鹼水解法',
+            source: 'California CalRecycle',
+            summary: '繼 2025 年推行 100 ppm 後，加州正式立法於下階段將總有機氟（TOF）限制降至嚴苛的 50 ppm，並不再接受傳統甲醇萃取測試，全面強制要求進行強鹼水解，深度暴露纖維深處化學 PFAS。',
+            content: `<h3>永久化學品 PFAS 美加司法執法風暴</h3>
+                      <p>加州 AB 1817 法案將在接下來全面進入 50 ppm 總有機氟（TOF）限制。這項超低限值意味著化纖與染整廠「任何故意添加」全氟整理劑均會被海關或消費者保護局重罰。</p>
+                      <p>執法機構強制改用全新的 $\ \text{EN 17681-1:2025} \ $ 檢測法。該標準利用高濃度鹼性水解液，強行切割降解高分子鏈，使深嵌在尼龍或聚酯長絲內部或功能性防潑水塗層深層的結合態 PFAS 完全暴露。防污染管道管治與非 deliberate 交叉污染控制，成為今年染整界的首要功課。</p>`,
+            imageUrl: '',
+            trustScore: 0.97,
+            tags: ['#AB1817', '#PFAS禁用', '#EN17681', '#加州環保限令']
+        },
+        {
+            id: 'art-5',
+            category: 'rd',
+            title: 'DyeCoo 推出第三代超臨界二氧化碳無水染色機，實現高彈性氨綸面料高水洗牢度',
+            source: 'MDPI & DyeCoo 合作白皮書',
+            summary: '氨綸（Spandex）在高溫超臨界介質下極易發生降解斷鍵。新一代無水染色機採用微溫高壓動態調控，不耗費一滴水完成高吸附率染色，能耗下修 50%。',
+            content: `<h3>解決合成纖維無水高牢度染色難題</h3>
+                      <p>傳統氨綸染整高度依賴大量助劑與水洗去污，而超臨界染色能讓染料分子完美滲入大分子空隙。DyeCoo 改良了氣體壓縮循環，使得面料在染色槽中的環境能隨時處於更穩定的微溫高壓相態中。</p>
+                      <p>實測表明，染色後的再生聚酯混紡高彈力氨綸纖維，水洗牢度達到 AATCC 規定的 4.5 級，且整體水消耗降低 100%，化石能源消耗相較傳統蒸汽熱能節能 50%，完成全生命週期可持續綠色工藝轉變。</p>`,
+            imageUrl: '',
+            trustScore: 0.94,
+            metrics: {
+                "水資源節能": "100%",
+                "能源節省": "50%",
+                "牢度指標": "4.5 級"
+            },
+            tags: ['#DyeCoo', '#無水染色', '#氨綸混紡', '#綠色低碳']
+        },
+        {
+            id: 'art-6',
+            category: 'trend',
+            title: '可持續戶外大牌 Houdini 宣布 2027 年將全線紡織材料轉換為化學閉環回收 PET 纖維',
+            source: 'Houdini Brand Dynamics',
+            summary: '宣布未來將避開來自「PET 飲料瓶片」的再生來源（面臨飲料巨頭爭奪而暴漲），全面採用紡織廢料 Textile-to-Textile 物理與化學物理混合法產出的閉環聚酯長絲。',
+            content: `<h3>打破瓶片再生路徑依賴</h3>
+                      <p>傳統的 Recycle PET 紡織品多源自回收寶特瓶片（rPET Bottle Flakes）。然而隨著可口可樂、百事等食品巨頭搶購，rPET 價格持續攀升。戶外領導品牌 Houdini 認為只有打通「纖維到纖維（Textile-to-Textile）」的真正閉環，才能實現真正的循環套利。</p>
+                      <p>品牌與瑞典 RISE 研究所緊密合作，採用 Mass Balance 合規機制，其高性能外套面料不僅實現無氟化，更通過全生命週期追溯認證，並積極部署數位產品護照（DPP）以因應歐盟 ESPR 銷毀禁令。</p>`,
+            imageUrl: '',
+            trustScore: 0.91,
+            tags: ['#Houdini', '#紡織閉環', '#rPET替代', '#循環商業模型']
+        },
+        {
+            id: 'art-7',
+            category: 'regulation',
+            title: '歐盟永續生態設計 ESPR「未售出紡織品銷毀禁令」強制實施與數位產品護照（DPP）倒計時',
+            source: '歐盟 DG TAXUD 官網',
+            summary: '歐盟全面限制品牌銷毀多餘庫存紡織品，並強制建立全產品追溯。自 2026 年底起，數位產品護照 (DPP) 技術標準確立，進入歐盟之成衣必須附有包含原油到纖維回收全追蹤鏈。',
+            content: `<h3>綠色合規轉為強硬法律負債</h3>
+                      <p>歐盟《永續產品生態設計法規》（ESPR）宣告「未售出服飾與鞋類產品銷毀禁令」即將硬性生效，企業再也無法採用「燒毀滯銷品」手段來維持品牌溢價與財報美化，促使服裝品牌急需在採購階段便優化預測與閉環再生比例。</p>
+                      <p>同時，所有入境歐盟的紡織品必須附帶數位產品護照（Digital Product Passport, DPP）。進口商需提交第三方認證的碳邊境排放數據與再生纖維質量平衡（Mass Balance）溯源。法規徹底推動了化纖與紡織加工廠與上游石化原物料追溯體系的鏈結需求。</p>`,
+            imageUrl: '',
+            trustScore: 0.96,
+            tags: ['#ESPR', '#產品護照', '#銷毀禁令', '#歐盟環保合規']
+        }
+    ];
 
-const labels = ['06-12', '06-13', '06-14', '06-15', '06-16', '06-17'];
+    let fiberCommodities = [
+        { name: "原油期貨 (Brent)", region: "ICE期貨", price: 81.45, unit: "USD/bbl", date: "06-25", cas: "8008-20-6" },
+        { name: "對二甲苯 (PX)", region: "CFR台灣", price: 928.00, unit: "USD/ton", date: "06-25", cas: "106-42-3" },
+        { name: "精對苯二甲酸 (PTA)", region: "華東現貨", price: 6027.00, unit: "RMB/mt", date: "06-25", cas: "100-21-0" },
+        { name: "乙二醇 (MEG)", region: "華東現貨", price: 4780.00, unit: "RMB/mt", date: "06-25", cas: "107-21-1" },
+        { name: "聚酯切片 (PET)", region: "江浙現貨", price: 7150.00, unit: "RMB/mt", date: "06-25", cas: "25038-59-9" },
+        { name: "尼龍 66 切片 (Nylon)", region: "華東現貨", price: 18500.00, unit: "RMB/mt", date: "06-25", cas: "32131-17-2" }
+    ];
 
-// 2. 建立 Chart.js 實例
-const ctx = document.getElementById('historyChart').getContext('2d');
-let myChart = new Chart(ctx, {
-type: 'line',
-data: {
-labels: labels,
-datasets:
-},
-options: {
-responsive: true,
-maintainAspectRatio: false,
-plugins: {
-legend: {
-position: 'top',
-labels: { font: { size: 11, weight: 'bold' } }
-}
-},
-scales: {
-y: {
-ticks: { font: { size: 10, family: 'monospace' } },
-grid: { color: '#f1f5f9' }
-},
-x: {
-ticks: { font: { size: 10, family: 'monospace' } },
-grid: { display: false }
-}
-}
-}
-});
+    // ==================== B. APP 全域狀態 (App State Management) ====================
+    let currentView = 'dashboard';
+    let currentCategoryFilter = 'all';
+    let appArticles = [...rawArticles];
+    
+    // 引擎排版調度權重
+    let engineWeights = {
+        w1: 0.45, // 圖片侵入
+        w2: 0.30, // 空白浪費
+        w3: 0.25  // 權威偏差
+    };
+    
+    // Star-Contraction 演算法模擬圖節點與邊
+    let dedupNodes = [
+        { id: 1, label: 'RISE超臨界技術A', active: true, cluster: 1, x: 80, y: 70 },
+        { id: 2, label: 'RISE超臨界技術B (抄襲轉載)', active: true, cluster: 1, x: 130, y: 120 },
+        { id: 3, label: 'WGSN黃昏色趨勢原創', active: true, cluster: 3, x: 300, y: 60 },
+        { id: 4, label: '美國追加Sec122臨時關稅', active: true, cluster: 4, x: 500, y: 70 },
+        { id: 5, label: 'DyeCoo無水氨綸染色', active: true, cluster: 5, x: 80, y: 200 },
+        { id: 6, label: 'Houdini閉環化學纖維A', active: true, cluster: 6, x: 300, y: 200 },
+        { id: 7, label: '加州AB1817 PFAS法規', active: true, cluster: 7, x: 500, y: 200 },
+        { id: 8, label: 'RISE超臨界技術C (公關稿抄襲)', active: true, cluster: 1, x: 160, y: 50 },
+        { id: 9, label: 'Houdini閉環再生B (媒體二手轉載)', active: true, cluster: 6, x: 250, y: 220 },
+        { id: 10, label: 'Houdini閉環再生C (三手複製文案)', active: true, cluster: 6, x: 340, y: 230 },
+        { id: 11, label: '歐盟ESPR未售出銷毀禁令', active: true, cluster: 11, x: 680, y: 130 }
+    ];
 
-// 3. 切換選單更新數據
-function updateChartData() {
-const selectedMaterial = document.getElementById('materialSelector').value;
-const newSet = chartDataSets[selectedMaterial];
+    let dedupEdges = [
+        { source: 1, target: 2, similarity: 0.89, active: true },
+        { source: 1, target: 8, similarity: 0.85, active: true },
+        { source: 2, target: 8, similarity: 0.82, active: true },
+        { source: 6, target: 9, similarity: 0.91, active: true },
+        { source: 6, target: 10, similarity: 0.94, active: true },
+        { source: 9, target: 10, similarity: 0.88, active: true }
+    ];
 
-myChart.data.datasets.label = newSet.label;
-myChart.data.datasets.data = newSet.data;
-myChart.data.datasets.borderColor = newSet.borderColor;
-myChart.data.datasets.backgroundColor = newSet.backgroundColor;
+    let dedupStep = 0; // 0: 原始, 1: Large-Star 收縮, 2: Small-Star 聚類摺疊
 
-myChart.update();
-}
+    // ==================== C. 初始化事件 (On Window Load) ====================
+    window.onload = function() {
+        renderPriceMonitor();
+        renderDashboardGrid();
+        renderMath();
+        init3DFlipbook();
+        renderDeduplicationGraph();
+        startCrawlerSimulatedLogs();
+    };
 
-// 4. 一鍵複製分享連結
-function copyShareLink() {
-const currentUrl = window.location.href;
-navigator.clipboard.writeText(currentUrl).then(function() {
-alert("👍 全球紡織決策看板連結已複製！您可以直接貼到 LINE、WeChat、社群群組分享給主管與同仁。");
-}).catch(function(err) {
-console.error("無法複製網址: ", err);
-});
-}
+    // ==================== D. 實時原物料監視槽繪製 (SHA256 Exact Filtering) ====================
+    function renderPriceMonitor() {
+        const container = document.getElementById('price-monitor-bar');
+        container.innerHTML = '';
+        fiberCommodities.forEach((item, idx) => {
+            // SHA256 模擬雜湊 (模擬 exact duplicate filtering)
+            const mockHash = `${item.cas}-${item.region}-${item.date}`;
+            const cardHtml = `
+                <div class="bg-paper p-3 border border-bordergold rounded flex flex-col justify-between hover:border-ink transition-all relative">
+                    <div class="flex items-center justify-between mb-1">
+                        <span class="text-[10px] font-black text-neutral-400 font-mono">${item.cas}</span>
+                        <span class="text-[9px] bg-neutral-200 text-neutral-700 font-bold px-1.5 py-0.5 rounded scale-90">${item.region}</span>
+                    </div>
+                    <p class="text-xs font-black truncate">${item.name}</p>
+                    <div class="flex items-baseline justify-between mt-2">
+                        <span class="text-base font-black font-mono text-ink">${parseFloat(item.price).toLocaleString()}</span>
+                        <span class="text-[9px] text-neutral-500 font-mono">${item.unit}</span>
+                    </div>
+                    <!-- 漲跌模擬 -->
+                    <div class="flex items-center justify-between text-[9px] mt-1 text-emerald-600 font-bold">
+                        <span><i class="fa-solid fa-arrow-trend-up"></i> +${(Math.random()*1.5).toFixed(2)}%</span>
+                        <span class="text-[8px] text-neutral-300 font-mono">06-25</span>
+                    </div>
+                </div>
+            `;
+            container.innerHTML += cardHtml;
+        });
+    }
 
-// 5. 分類按鈕點擊過濾 (安全重構：完全不使用管道符號 '|')
-function filterCategory(cat) {
-const buttons = document.querySelectorAll('.cat-btn');
-buttons.forEach(function(btn) {
-if (btn.getAttribute('data-target') === cat) {
-btn.classList.remove('bg-white', 'text-slate-600', 'hover:bg-slate-100');
-btn.classList.add('bg-indigo-600', 'text-white', 'shadow');
-} else {
-btn.classList.remove('bg-indigo-600', 'text-white', 'shadow');
-btn.classList.add('bg-white', 'text-slate-600', 'hover:bg-slate-100');
-}
-});
+    // ==================== E. Flipboard "Duplo" 網格自適應渲染 ====================
+    function renderDashboardGrid() {
+        const grid = document.getElementById('dashboard-intelligence-grid');
+        grid.innerHTML = '';
 
-const cards = document.querySelectorAll('.news-card');
-cards.forEach(function(card) {
-const cardCat = card.getAttribute('data-category');
+        // 分類過濾
+        let filtered = appArticles.filter(art => {
+            if (currentCategoryFilter === 'all') return true;
+            return art.category === currentCategoryFilter;
+        });
 
-// 使用 Array.indexOf() 取代邏輯或(||)，完美規避 Markdown 解析 Bug
-const conditionArray = ['all', cardCat];
-if (conditionArray.indexOf(cat)!== -1) {
-card.style.display = 'block';
-} else {
-card.style.display = 'none';
-}
-});
-}
+        if (filtered.length === 0) {
+            grid.innerHTML = `
+                <div class="col-span-full py-16 text-center text-neutral-400 flex flex-col items-center justify-center gap-3">
+                    <i class="fa-solid fa-folder-open text-4xl"></i>
+                    <p class="font-bold">沒有符合當前過濾條件的情報內容</p>
+                </div>
+            `;
+            return;
+        }
 
-// 6. 即時關鍵字檢索 (安全重構：完全不使用管道符號 '|')
-function searchNews() {
-const query = document.getElementById('search-input').value.toLowerCase();
-const cards = document.querySelectorAll('.news-card');
+        // 動態模擬 Duplo 引擎自適應模板指派與計分
+        filtered.forEach((art, idx) => {
+            let colSpan = 'md:col-span-1';
+            let rowSpan = '';
+            let styleClass = '';
+            let cardHeader = '';
+            let cardExtra = '';
+            
+            // 1. 根據分類調整排版密度與幾何方案
+            if (art.category === 'trend') {
+                // 流行與品牌：低密度、大圖或漸變底、寬高比放寬、配K-Means調色盤
+                colSpan = 'md:col-span-2';
+                rowSpan = 'lg:row-span-2';
+                const colors = art.palette || ['#221436', '#a93226', '#34495e'];
+                styleClass = `text-white relative overflow-hidden`;
+                
+                let dotsHtml = '';
+                colors.forEach(c => {
+                    dotsHtml += `<span class="w-4 h-4 rounded-full border border-white/60 shadow-sm" style="background-color: ${c}"></span>`;
+                });
 
-cards.forEach(function(card) {
-const title = card.querySelector('h3').innerText.toLowerCase();
-const desc = card.querySelector('p').innerText.toLowerCase();
-const tag = card.querySelector('.p-5 span').innerText.toLowerCase();
+                cardHeader = `
+                    <div class="absolute inset-0 bg-gradient-to-br from-[${colors[0]}] to-[${colors[1]}] opacity-90 z-0" style="background: linear-gradient(135deg, ${colors[0]} 0%, ${colors[1]} 100%)"></div>
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full blur-2xl z-0"></div>
+                `;
+                cardExtra = `
+                    <div class="mt-4 border-t border-white/20 pt-3 z-10 relative">
+                        <span class="text-[10px] text-white/60 uppercase font-black tracking-wider block mb-2">
+                            <i class="fa-solid fa-palette mr-1"></i> K-Means 聚類趨勢色彩主調域值
+                        </span>
+                        <div class="flex gap-1.5">${dotsHtml}</div>
+                    </div>
+                `;
+            } else if (art.category === 'rd') {
+                // 技術研發：中等密度、結構化邊框、專利公式展示、綠色永續製程感
+                colSpan = 'md:col-span-2';
+                styleClass = `border-l-4 border-emerald-600 bg-paper`;
+                
+                let formulaHtml = '';
+                if (art.formulas && art.formulas.length > 0) {
+                    formulaHtml = `
+                        <div class="my-3 p-2 bg-warmgray rounded border border-neutral-200/60 text-center text-sm font-mono text-emerald-800">
+                            $$${art.formulas[0]}$$
+                        </div>
+                    `;
+                }
 
-var isMatch = false;
-if (title.indexOf(query)!== -1) { isMatch = true; }
-if (desc.indexOf(query)!== -1) { isMatch = true; }
-if (tag.indexOf(query)!== -1) { isMatch = true; }
+                let metricsHtml = '';
+                if (art.metrics) {
+                    metricsHtml += `<div class="mt-4 grid grid-cols-3 gap-2 border-t border-neutral-100 pt-3 text-center text-[10px] uppercase font-bold">`;
+                    for (let key in art.metrics) {
+                        metricsHtml += `
+                            <div class="bg-warmgray/80 p-1.5 rounded">
+                                <span class="text-neutral-400 block scale-90">${key}</span>
+                                <span class="text-emerald-700 text-xs font-black block mt-0.5">${art.metrics[key]}</span>
+                            </div>
+                        `;
+                    }
+                    metricsHtml += `</div>`;
+                }
 
-if (isMatch) {
-card.style.display = 'block';
-} else {
-card.style.display = 'none';
-}
-});
-}
+                cardExtra = formulaHtml + metricsHtml;
+            } else if (art.category === 'regulation') {
+                // 關稅法規：中等密度、黑框嚴謹感、關稅加疊試算展示
+                colSpan = 'md:col-span-1';
+                styleClass = `border-l-4 border-rose-600 bg-paper`;
+                
+                let tariffHtml = '';
+                if (art.tariffImpact) {
+                    tariffHtml += `<div class="mt-3 text-[10px] font-bold border-t border-neutral-100 pt-2 flex flex-col gap-1">`;
+                    for (let key in art.tariffImpact) {
+                        const isTotal = key.includes("綜合");
+                        tariffHtml += `
+                            <div class="flex justify-between p-1 rounded ${isTotal ? 'bg-rose-50 text-rose-800 font-black' : 'text-neutral-500'}">
+                                <span>${key}</span>
+                                <span>${art.tariffImpact[key]}</span>
+                            </div>
+                        `;
+                    }
+                    tariffHtml += `</div>`;
+                }
+                cardExtra = tariffHtml;
+            } else {
+                styleClass = `bg-paper`;
+            }
+
+            // Tag 拼接
+            let tagsHtml = '';
+            if (art.tags) {
+                art.tags.forEach(t => {
+                    tagsHtml += `<span class="text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-full ${art.category === 'trend' ? 'bg-white/20 text-white' : 'bg-warmgray text-neutral-600 border border-neutral-200'}">${t}</span>`;
+                });
+            }
+
+            const cardHtml = `
+                <div class="intelligence-card ${styleClass} p-6 flex flex-col justify-between hover:scale-[1.01] hover:shadow-lg transition-all duration-300 relative rounded-lg border border-bordergold shadow-sm ${colSpan} ${rowSpan}">
+                    ${cardHeader}
+                    <div class="z-10 relative flex-grow flex flex-col justify-between">
+                        <div>
+                            <!-- Card Meta Header -->
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="text-[10px] tracking-wider uppercase font-black px-2.5 py-0.5 rounded ${getCategoryBadgeStyle(art.category)}">
+                                    ${getCategoryChinese(art.category)}
+                                </span>
+                                <span class="text-[10px] text-neutral-400 font-mono font-bold">${art.source}</span>
+                            </div>
+                            
+                            <!-- Card Title -->
+                            <h3 onclick="openReaderMode('${art.id}')" class="text-base font-bold font-serif hover:text-indigo-600 cursor-pointer line-clamp-2 leading-snug">
+                                ${art.title}
+                            </h3>
+                            
+                            <!-- Card Summary -->
+                            <p class="text-xs ${art.category === 'trend' ? 'text-white/80' : 'text-neutral-500'} mt-3 line-clamp-3 leading-relaxed">
+                                ${art.summary}
+                            </p>
+                        </div>
+
+                        <div>
+                            <!-- Custom Extra Dynamic Elements -->
+                            ${cardExtra}
+
+                            <!-- Card Footer Tags & Action -->
+                            <div class="flex items-center justify-between mt-4 pt-3 border-t ${art.category === 'trend' ? 'border-white/10' : 'border-neutral-100'} text-xs">
+                                <div class="flex flex-wrap gap-1 max-w-[70%]">
+                                    ${tagsHtml}
+                                </div>
+                                <button onclick="openReaderMode('${art.id}')" class="text-[10px] font-black uppercase tracking-wider ${art.category === 'trend' ? 'text-white hover:underline' : 'text-indigo-600 hover:text-indigo-800'}">
+                                    閱讀細節 <i class="fa-solid fa-chevron-right ml-0.5 text-[8px]"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            grid.innerHTML += cardHtml;
+        });
+
+        // 重新調用 Math 渲染
+        renderMath();
+    }
+
+    function getCategoryChinese(cat) {
+        switch(cat) {
+            case 'rd': return '製程 R&D 技術';
+            case 'trend': return '流行與品牌';
+            case 'regulation': return '法規與關稅';
+            case 'price': return '原料報價';
+            default: return '產情情報';
+        }
+    }
+
+    function getCategoryBadgeStyle(cat) {
+        switch(cat) {
+            case 'rd': return 'bg-emerald-100 text-emerald-800';
+            case 'trend': return 'bg-purple-100 text-purple-800';
+            case 'regulation': return 'bg-rose-100 text-rose-800';
+            default: return 'bg-neutral-100 text-neutral-800';
+        }
+    }
+
+    // ==================== F. LaTeX 公式渲染 (KaTeX Safe Wrapper) ====================
+    function renderMath() {
+        if (typeof katex !== 'undefined') {
+            const mathElements = document.getElementsByClassName('latex-container');
+            for (let i = 0; i < mathElements.length; i++) {
+                let el = mathElements[i];
+                let text = el.textContent.trim();
+                if (text.startsWith('$$') && text.endsWith('$$')) {
+                    text = text.substring(2, text.length - 2);
+                }
+                try {
+                    katex.render(text, el, { displayMode: true, throwOnError: false });
+                } catch (e) {
+                    console.error("KaTeX error: ", e);
+                }
+            }
+
+            // 也處理段落中帶有單個 $ 的 inline math
+            const inlineMath = document.querySelectorAll('p, span, div, h3');
+            inlineMath.forEach(el => {
+                if (el.innerHTML.includes('$')) {
+                    let text = el.innerHTML;
+                    // 正則替換 $...$ 為 katex 渲染格式
+                    let reg = /\$(.*?)\$/g;
+                    let newText = text.replace(reg, function(match, formula) {
+                        try {
+                            return katex.renderToString(formula, { displayMode: false, throwOnError: false });
+                        } catch (e) {
+                            return match;
+                        }
+                    });
+                    el.innerHTML = newText;
+                }
+            });
+        }
+    }
+
+    // ==================== G. 3D 書頁視圖與翻頁動畫 (3D Flipbook Implementation) ====================
+    let bookCurrentPage = 0;
+    const pagesData = [
+        // Cover
+        {
+            type: 'cover',
+            title: 'DAILY TEXTILE INTELLIGENCE',
+            subtitle: '每日紡織化纖產情智庫特刊',
+            date: '2026年6月25日 星期四',
+            editor: '決策主管：周家旭 尊啟'
+        },
+        // Spread 1 (Page 2 & 3)
+        {
+            type: 'article',
+            articleId: 'art-1',
+            title: '【物理再生】棉聚酯混紡無水拆解製程創舉',
+            content: `瑞典 RISE 研究所與皇家理工成功繞過化學解聚，利用超臨界二氧化碳對纖維大分子結構進行選擇性微切割物理拆解。<br><br>這解決了混紡織物回收的技術黑洞。在最優相態公式下，再生聚酯力學強度保留達 96%：<br><br><div class="latex-container p-3 bg-neutral-100 rounded text-center my-4 font-mono">P_r = \\frac{P}{P_c}, \\quad T_r = \\frac{T}{T_c}</div>`
+        },
+        {
+            type: 'article',
+            articleId: 'art-2',
+            title: '【WGSN預測】黃昏紫與機能面料防污變革',
+            content: `2027秋冬主題色 Future Dusk 在高度反光的「三葉異形絲」上呈現星際偏光極光質感，推動機能塗層全面淘汰傳統全氟防水整理劑。<br><br>下游面料廠正面臨無氟防水接枝法與防污染管治革命。`
+        },
+        // Spread 2 (Page 4 & 5)
+        {
+            type: 'article',
+            articleId: 'art-3',
+            title: '【臨時稅衝擊】追加Sec122臨時徵收10%關稅',
+            content: `美國最高法院宣布廢除 IEEPA 後，白宮即刻啟動 Section 122 追加臨時 10% 統一關稅。此舉引發極其劇烈的供應鏈洗牌效應。<br><br>中國化纖產品的綜合稅率被一舉推至 44% 高峰。`
+        },
+        {
+            type: 'article',
+            articleId: 'art-4',
+            title: '【永久化學品】加州 AB 1817 TOF 限制下修 50ppm',
+            content: `限制將於下階段進入更苛刻的 50 ppm 上限。司法機構不再接受簡易萃取法，全面強制定向實施 EN 17681-1:2025 強鹼水解測試。<br><br>任何故意添加 PFAS 的管道皆會遭受阻。`
+        },
+        // Spread 3 (Page 6 & 7)
+        {
+            type: 'article',
+            articleId: 'art-5',
+            title: '【染色革命】DyeCoo無水氨綸染色白皮書',
+            content: `傳統染色耗水量大，第三代二氧化碳染色機通過微溫高壓動態調控，不耗費一滴水，在避免氨綸降解的前提下達到 AATCC 牢度 4.5 級，節能高達 50%。`
+        },
+        {
+            type: 'article',
+            articleId: 'art-6',
+            title: '【品牌動態】Houdini 2027 閉環回收戰略',
+            content: `為規避暴漲的回收飲料瓶片爭奪，戶外龍頭 Houdini 正式部署紡織廢料 Textile-to-Textile 精密回收機，實現化學與物理完美閉環，直面歐盟 ESPR 生態設計挑戰。`
+        }
+    ];
+
+    function init3DFlipbook() {
+        const book = document.getElementById('virtual-book');
+        book.innerHTML = '';
+        
+        // 渲染成一組組紙頁 (Pages as absolute layers)
+        // 頁面 0: Cover / 空白
+        // 頁面 1: Spread 1
+        // 頁面 2: Spread 2
+        // 頁面 3: Spread 3
+        
+        // 1. Cover Left Sheet
+        const pageCount = Math.ceil(pagesData.length / 2);
+        
+        for (let i = 0; i < pageCount; i++) {
+            const zIndex = pageCount - i;
+            const leftData = pagesData[i * 2] || { type: 'empty' };
+            const rightData = pagesData[i * 2 + 1] || { type: 'empty' };
+            
+            const sheet = document.createElement('div');
+            sheet.className = `absolute w-full h-full top-0 left-0 transition-transform duration-700 pointer-events-none`;
+            sheet.style.zIndex = zIndex;
+            sheet.style.transformStyle = 'preserve-3d';
+            sheet.id = `book-sheet-${i}`;
+
+            // 左頁 (背面)
+            const leftPage = document.createElement('div');
+            leftPage.className = `page page-left page-front bg-paper border-r border-neutral-300 p-8 md:p-12 paper-texture flex flex-col justify-between`;
+            leftPage.style.boxShadow = 'inset -10px 0 30px rgba(0,0,0,0.05)';
+            leftPage.innerHTML = renderPageContentHTML(leftData, i * 2);
+
+            // 右頁 (正面)
+            const rightPage = document.createElement('div');
+            rightPage.className = `page page-right page-back bg-paper border-l border-neutral-300 p-8 md:p-12 paper-texture flex flex-col justify-between`;
+            rightPage.style.boxShadow = 'inset 10px 0 30px rgba(0,0,0,0.05)';
+            rightPage.innerHTML = renderPageContentHTML(rightData, i * 2 + 1);
+
+            sheet.appendChild(leftPage);
+            sheet.appendChild(rightPage);
+            book.appendChild(sheet);
+        }
+
+        update3DPageClasses();
+    }
+
+    function renderPageContentHTML(data, num) {
+        if (data.type === 'cover') {
+            return `
+                <div class="h-full flex flex-col justify-between items-center text-center py-8">
+                    <div>
+                        <span class="text-xs tracking-widest bg-ink text-paper px-3 py-1 font-bold rounded uppercase">Weekly Issue</span>
+                        <h1 class="font-editorial text-4xl font-extrabold mt-6 text-ink leading-tight tracking-tight">${data.title}</h1>
+                        <p class="font-serif text-lg text-neutral-600 mt-2 font-bold">${data.subtitle}</p>
+                    </div>
+                    
+                    <div class="w-20 h-[2px] bg-bordergold"></div>
+
+                    <div>
+                        <p class="text-xs font-mono tracking-widest text-neutral-400">DECISION REPORT / INTELLIGENCE HUBS</p>
+                        <p class="text-xs text-neutral-500 mt-2 font-bold">${data.date}</p>
+                        <p class="text-sm text-indigo-700 font-serif font-black mt-2">${data.editor}</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        if (data.type === 'article') {
+            return `
+                <div class="h-full flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between border-b border-neutral-100 pb-2 mb-4">
+                            <span class="text-[10px] font-bold tracking-widest text-indigo-600 uppercase">智庫每日智選</span>
+                            <span class="text-[10px] font-mono text-neutral-400">PAGE ${num + 1}</span>
+                        </div>
+                        <h3 class="font-serif text-lg font-black text-ink mb-3 leading-snug">${data.title}</h3>
+                        <div class="text-xs text-neutral-600 font-sans leading-relaxed text-justify">${data.content}</div>
+                    </div>
+                    <div class="flex items-center justify-between border-t border-neutral-100 pt-3 text-[10px] text-neutral-400 font-bold">
+                        <span>Flipboard 3D System</span>
+                        <button onclick="openReaderMode('${data.articleId}')" class="text-indigo-600 hover:underline">極簡屏讀器模式 <i class="fa-solid fa-expand ml-0.5"></i></button>
+                    </div>
+                </div>
+            `;
+        }
+
+        return `
+            <div class="h-full flex flex-col items-center justify-center text-neutral-300">
+                <i class="fa-solid fa-scroll text-3xl mb-2"></i>
+                <span class="text-xs font-bold">本版面待新情報推送</span>
+            </div>
+        `;
+    }
+
+    function update3DPageClasses() {
+        const pageCount = Math.ceil(pagesData.length / 2);
+        
+        for (let i = 0; i < pageCount; i++) {
+            const sheet = document.getElementById(`book-sheet-${i}`);
+            if (!sheet) continue;
+
+            if (i < bookCurrentPage) {
+                // 已翻到左邊 (左折疊 180 度，背面向前)
+                sheet.style.transform = 'rotateY(-180deg)';
+                sheet.style.pointerEvents = 'auto';
+                sheet.style.zIndex = pageCount + i; // 確保堆疊正確
+            } else if (i === bookCurrentPage) {
+                // 當前中線平鋪頁面 (不旋轉)
+                sheet.style.transform = 'rotateY(0deg)';
+                sheet.style.pointerEvents = 'auto';
+                sheet.style.zIndex = pageCount + 10; // 最上層
+            } else {
+                // 未翻開，在右邊疊放
+                sheet.style.transform = 'rotateY(0deg)';
+                sheet.style.pointerEvents = 'none';
+                sheet.style.zIndex = pageCount - i;
+            }
+        }
+
+        document.getElementById('book-page-num').textContent = `第 ${bookCurrentPage + 1} / ${pageCount} 頁組`;
+    }
+
+    function flipPageNext() {
+        const pageCount = Math.ceil(pagesData.length / 2);
+        if (bookCurrentPage < pageCount - 1) {
+            bookCurrentPage++;
+            update3DPageClasses();
+            showToast('3D 翻頁成功', '模擬 Flipboard 動態翻頁與中線陰影摺疊渲染。', 'info');
+        }
+    }
+
+    function flipPagePrev() {
+        if (bookCurrentPage > 0) {
+            bookCurrentPage--;
+            update3DPageClasses();
+            showToast('翻回上一頁面', '自適應視網膜級透視陰影微調中。', 'info');
+        }
+    }
+
+    // ==================== H. 雙軌切換之極簡閱讀器模式 (Reader Mode View) ====================
+    let isReaderSerif = true;
+
+    function openReaderMode(articleId) {
+        const art = appArticles.find(a => a.id === articleId);
+        if (!art) return;
+
+        const container = document.getElementById('reader-content-area');
+        
+        let headerExtra = '';
+        if (art.category === 'trend') {
+            let dots = '';
+            (art.palette || []).forEach(c => {
+                dots += `<div class="w-6 h-6 rounded-full border border-neutral-300" style="background-color: ${c}"></div>`;
+            });
+            headerExtra = `
+                <div class="my-6 p-4 bg-warmgray rounded border border-neutral-200">
+                    <span class="text-xs font-black text-neutral-400 block mb-2">K-Means 色彩提取特徵調色盤</span>
+                    <div class="flex gap-2">${dots}</div>
+                </div>
+            `;
+        }
+
+        container.innerHTML = `
+            <div class="${isReaderSerif ? 'font-serif' : 'font-sans'} text-neutral-800 transition-all duration-300">
+                <!-- Meta Info -->
+                <div class="flex items-center gap-2 text-xs text-neutral-400 font-bold mb-4">
+                    <span class="px-2 py-0.5 bg-neutral-200 text-neutral-700 rounded">${getCategoryChinese(art.category)}</span>
+                    <span>•</span>
+                    <span>來源：${art.source}</span>
+                    <span>•</span>
+                    <span>權威信任度: ${art.trustScore}</span>
+                </div>
+                
+                <!-- Title -->
+                <h1 class="text-3xl font-black font-serif leading-tight mb-6 text-neutral-900 border-b border-bordergold pb-4">
+                    ${art.title}
+                </h1>
+
+                <!-- Body Content -->
+                <div class="reader-rich-text text-sm md:text-base leading-relaxed md:leading-loose text-justify text-neutral-700 space-y-6">
+                    ${art.content}
+                </div>
+
+                ${headerExtra}
+
+                <div class="mt-8 pt-6 border-t border-neutral-100 flex items-center justify-between text-xs text-neutral-400">
+                    <span>NLP AI 提煉自適應日報</span>
+                    <span>最後同步: 剛剛</span>
+                </div>
+            </div>
+        `;
+
+        document.getElementById('reader-view-overlay').classList.remove('hidden');
+        renderMath(); // 重新渲染閱讀器內的 LaTeX 公式
+    }
+
+    function closeReaderMode() {
+        document.getElementById('reader-view-overlay').classList.add('hidden');
+    }
+
+    function toggleReaderFont() {
+        isReaderSerif = !isReaderSerif;
+        const btn = document.querySelector('[onclick="toggleReaderFont()"]');
+        btn.textContent = isReaderSerif ? '切換為無襯線體' : '切換為經典襯線體';
+        // 重新更新內容區樣式
+        const contentDiv = document.querySelector('#reader-content-area > div');
+        if (contentDiv) {
+            if (isReaderSerif) {
+                contentDiv.classList.remove('font-sans');
+                contentDiv.classList.add('font-serif');
+            } else {
+                contentDiv.classList.remove('font-serif');
+                contentDiv.classList.add('font-sans');
+            }
+        }
+    }
+
+    // ==================== I. 實時抓取模擬器 (Simulated Live Crawler & Dedup Alert) ====================
+    let isCrawling = false;
+    function triggerSimulatedCrawl() {
+        if (isCrawling) return;
+        isCrawling = true;
+        
+        showToast('分布式抓取任務啟動', 'Apache ZooKeeper 選舉 Master-Scheduler 成功，正在實時探測目標網頁...', 'info');
+        
+        // 模擬延遲 2 秒後，抓取到一條高相似的轉載，與一條全新綠色染色 R&D 技術
+        setTimeout(() => {
+            // 隨機添加新情報至 AppArticles
+            const newArt = {
+                id: 'art-' + Date.now(),
+                category: 'rd',
+                title: '【展會現場直擊】ISPO 展會上公佈全新 100% 生物基防水透氣膜 hyperTEC 面料物理抗張極限',
+                source: 'ISPO Textrends',
+                summary: 'ISPO 展現場評委一致認可 hyperTEC 面料。其突破性在於生物基原料占比 100%，並保有優異防水物理極限。抗張結晶狀態相態臨界能公式滿足 $P_r = P/P_c$ 收縮。',
+                content: `<h3>2026年展會前沿突破</h3>
+                          <p>在 ISPO Munich 現場，新面料 hyperTEC 憑藉無氟、環保及高性能引起採購巨頭搶購。其在結晶結構析出上，臨界拉伸狀態臨界比 $\ P_r \ $ 計算關係式也保持了經典模型的完美契合：</p>
+                          <div class="latex-container my-4 p-3 bg-neutral-100 rounded text-center">$$P_r = \\frac{P}{P_c}$$</div>`,
+                imageUrl: '',
+                trustScore: 0.93,
+                metrics: {
+                    "生物基比例": "100%",
+                    "防水指數": "20,000mm",
+                    "透濕指標": "15,000g/㎡"
+                },
+                formulas: ["P_r = \\frac{P}{P_c}"],
+                tags: ['#hyperTEC', '#生物基防水', '#ISPO直擊', '#製程指標']
+            };
+
+            appArticles.unshift(newArt);
+            renderDashboardGrid();
+            
+            // 模擬 terminal 輸出
+            addLogToTerminal("SUCCESS: 抓取 ISPO Textrends 成功. 檢索到 1 條全新數據.");
+            addLogToTerminal("DEDUP: 計算 SHA256 精確哈希... 無衝突.");
+            addLogToTerminal("DEDUP: 計算 512維 MinHash LSH... 與原 art-1 相似度 0.24, 無重複. 准予併入網格.");
+            addLogToTerminal("DUPLO: 啟動分支定界優化排版. 新能量損失 E = 0.138. 最優模板指派成功.");
+            
+            showToast('發現全新產情！', '已成功抓取並自適應渲染至決策首屏卡片中。', 'success');
+            isCrawling = false;
+        }, 2200);
+    }
+
+    // ==================== J. Star-Contraction 去重演算法圖繪製與模擬 ====================
+    function renderDeduplicationGraph() {
+        const svg = document.getElementById('dedup-svg-canvas');
+        svg.innerHTML = '';
+
+        // 1. 繪製邊 (Lines)
+        dedupEdges.forEach(edge => {
+            const sourceNode = dedupNodes.find(n => n.id === edge.source);
+            const targetNode = dedupNodes.find(n => n.id === edge.target);
+            if (sourceNode && targetNode && sourceNode.active && targetNode.active) {
+                const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+                line.setAttribute("x1", sourceNode.x);
+                line.setAttribute("y1", sourceNode.y);
+                line.setAttribute("x2", targetNode.x);
+                line.setAttribute("y2", targetNode.y);
+                line.setAttribute("stroke", edge.active ? "#94a3b8" : "#cbd5e1");
+                line.setAttribute("stroke-width", "1.5");
+                line.setAttribute("stroke-dasharray", edge.active ? "none" : "3,3");
+                svg.appendChild(line);
+
+                // 標示相似度數值
+                if (edge.active && dedupStep === 0) {
+                    const midX = (sourceNode.x + targetNode.x) / 2;
+                    const midY = (sourceNode.y + targetNode.y) / 2 - 4;
+                    const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                    text.setAttribute("x", midX);
+                    text.setAttribute("y", midY);
+                    text.setAttribute("fill", "#475569");
+                    text.setAttribute("font-size", "8px");
+                    text.setAttribute("font-weight", "bold");
+                    text.setAttribute("text-anchor", "middle");
+                    text.textContent = `J=${edge.similarity}`;
+                    svg.appendChild(text);
+                }
+            }
+        });
+
+        // 2. 繪製節點 (Nodes)
+        dedupNodes.forEach(node => {
+            if (!node.active) return;
+
+            const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+            g.setAttribute("transform", `translate(${node.x}, ${node.y})`);
+
+            const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+            circle.setAttribute("r", "12");
+            circle.setAttribute("fill", getNodeColorByCluster(node.cluster));
+            circle.setAttribute("stroke", "#1e293b");
+            circle.setAttribute("stroke-width", "1.5");
+            circle.setAttribute("class", "cursor-pointer transition-all hover:scale-110");
+            
+            const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+            text.setAttribute("y", "24");
+            text.setAttribute("fill", "#1e293b");
+            text.setAttribute("font-size", "8px");
+            text.setAttribute("font-weight", "black");
+            text.setAttribute("text-anchor", "middle");
+            text.textContent = node.label;
+
+            // 標示 ID
+            const idText = document.createElementNS("http://www.w3.org/2000/svg", "text");
+            idText.setAttribute("y", "3");
+            idText.setAttribute("fill", "#ffffff");
+            idText.setAttribute("font-size", "9px");
+            idText.setAttribute("font-weight", "black");
+            idText.setAttribute("text-anchor", "middle");
+            idText.textContent = node.id;
+
+            g.appendChild(circle);
+            g.appendChild(idText);
+            g.appendChild(text);
+            svg.appendChild(g);
+        });
+    }
+
+    function getNodeColorByCluster(cluster) {
+        // 同一聚類色系相同，模擬收縮後被歸併到同個 Canonical Center 
+        switch(cluster) {
+            case 1: return "#6366f1"; // Indigo (RISE)
+            case 3: return "#d946ef"; // Magenta (WGSN)
+            case 4: return "#ef4444"; // Red (Sec122)
+            case 5: return "#10b981"; // Emerald (DyeCoo)
+            case 6: return "#f59e0b"; // Amber (Houdini)
+            case 7: return "#3b82f6"; // Blue (PFAS)
+            default: return "#64748b";
+        }
+    }
+
+    function stepDeduplicationAlgorithm() {
+        const btn = document.getElementById('btn-dedup-step');
+        const status = document.getElementById('dedup-algo-status');
+
+        if (dedupStep === 0) {
+            // Step 1: Large-Star Phase (大星圖收縮，所有相似節點指向 ID 最小的局部中心)
+            dedupStep = 1;
+            status.textContent = "運行中: Large-Star 收縮 (相似節點指向 ID 1 & 6 中心)";
+            
+            // RISE 轉載指向 1, Houdini 轉載指向 6
+            // 動態拉近節點距離模擬聚類收縮
+            dedupNodes.forEach(n => {
+                if (n.cluster === 1 && n.id !== 1) {
+                    n.x = 100; n.y = 80;
+                }
+                if (n.cluster === 6 && n.id !== 6) {
+                    n.x = 310; n.y = 210;
+                }
+            });
+
+            renderDeduplicationGraph();
+            showToast('Large-Star 運算完成', '所有高相似子節點已建立單向圖歸併指向 Canonical ID 中心。', 'success');
+            btn.textContent = "執行折疊隱藏 (Fold Sub-nodes)";
+        } else if (dedupStep === 1) {
+            // Step 2: Small-Star & Fold Phase (小星收縮收斂，去除子節點 active 狀態，完成網格折疊)
+            dedupStep = 2;
+            status.textContent = "圖收斂: 重複轉載已完美折疊至底層折疊選單中";
+
+            // 子節點隱藏，邊線隱藏
+            dedupNodes.forEach(n => {
+                if ((n.cluster === 1 && n.id !== 1) || (n.cluster === 6 && n.id !== 6)) {
+                    n.active = false;
+                }
+            });
+            dedupEdges.forEach(e => e.active = false);
+
+            renderDeduplicationGraph();
+            showToast('Star-Contraction 收斂完成', '3 個抄襲/二手轉載已在前端網格中完成隱藏折疊，智庫保留權威原創。', 'success');
+            
+            // 更新計量器
+            document.getElementById('stat-curated').textContent = "7 篇";
+            document.getElementById('stat-saved').textContent = "36.3%";
+            btn.textContent = "重設演算法圖狀態";
+        } else {
+            resetDeduplicationGraph();
+        }
+    }
+
+    function resetDeduplicationGraph() {
+        dedupStep = 0;
+        const btn = document.getElementById('btn-dedup-step');
+        const status = document.getElementById('dedup-algo-status');
+        status.textContent = "圖狀態: 初始零散情報 (11個節點, 7條相似邊)";
+        
+        // 還原節點坐標與狀態
+        dedupNodes = [
+            { id: 1, label: 'RISE超臨界技術A', active: true, cluster: 1, x: 80, y: 70 },
+            { id: 2, label: 'RISE超臨界技術B (抄襲轉載)', active: true, cluster: 1, x: 130, y: 120 },
+            { id: 3, label: 'WGSN黃昏色趨勢原創', active: true, cluster: 3, x: 300, y: 60 },
+            { id: 4, label: '美國追加Sec122臨時關稅', active: true, cluster: 4, x: 500, y: 70 },
+            { id: 5, label: 'DyeCoo無水氨綸染色', active: true, cluster: 5, x: 80, y: 200 },
+            { id: 6, label: 'Houdini閉環化學纖維A', active: true, cluster: 6, x: 300, y: 200 },
+            { id: 7, label: '加州AB1817 PFAS法規', active: true, cluster: 7, x: 500, y: 200 },
+            { id: 8, label: 'RISE超臨界技術C (公關稿抄襲)', active: true, cluster: 1, x: 160, y: 50 },
+            { id: 9, label: 'Houdini閉環再生B (媒體二手轉載)', active: true, cluster: 6, x: 250, y: 220 },
+            { id: 10, label: 'Houdini閉環再生C (三手複製文案)', active: true, cluster: 6, x: 340, y: 230 },
+            { id: 11, label: '歐盟ESPR未售出銷毀禁令', active: true, cluster: 11, x: 680, y: 130 }
+        ];
+        dedupEdges.forEach(e => e.active = true);
+        
+        renderDeduplicationGraph();
+        document.getElementById('stat-curated').textContent = "11 篇";
+        document.getElementById('stat-saved').textContent = "0.0%";
+        btn.textContent = "交替進行 Star 圖收縮";
+    }
+
+    // ==================== K. Duplo 排版權重微調美學優化 ====================
+    function updateEngineWeights() {
+        const w1 = parseFloat(document.getElementById('slider-w1').value);
+        const w2 = parseFloat(document.getElementById('slider-w2').value);
+        const w3 = parseFloat(document.getElementById('slider-w3').value);
+        
+        // 規範化權重 (歸一)
+        const total = w1 + w2 + w3;
+        engineWeights.w1 = (w1 / total);
+        engineWeights.w2 = (w2 / total);
+        engineWeights.w3 = (w3 / total);
+
+        document.getElementById('weight-w1-val').textContent = engineWeights.w1.toFixed(2);
+        document.getElementById('weight-w2-val').textContent = engineWeights.w2.toFixed(2);
+        document.getElementById('weight-w3-val').textContent = engineWeights.w3.toFixed(2);
+
+        // 重新計算模擬美學得分 (Aesthetic Energy Minimization)
+        // 隨權重變更實時起伏，並觸發卡片排序微調
+        const calculatedLoss = (0.05 * engineWeights.w1 + 0.12 * engineWeights.w2 + 0.08 * engineWeights.w3).toFixed(3);
+        document.getElementById('current-energy-score').textContent = calculatedLoss;
+    }
+
+    function optimizeLayoutAnimation() {
+        showToast('執行 Duplo 分支定界優化', '正在模擬高維排版空間剪枝... 已尋得視覺能量損失最低之最佳網格方案。', 'success');
+        // 模擬打亂並微調卡片版面
+        appArticles.sort(() => Math.random() - 0.5);
+        renderDashboardGrid();
+    }
+
+    // ==================== L. 常規 UI 交互函數 (Nav, Filters, Logs, Toasts) ====================
+    function setAppView(view) {
+        currentView = view;
+        
+        // 隱藏全部
+        document.getElementById('view-dashboard').classList.add('hidden');
+        document.getElementById('view-flipbook').classList.add('hidden');
+        document.getElementById('view-engine').classList.add('hidden');
+
+        // 取消按鈕高亮
+        document.getElementById('btn-view-dashboard').className = "px-4 py-2 rounded font-medium transition-all bg-warmgray text-neutral-700 hover:bg-neutral-200";
+        document.getElementById('btn-view-flipbook').className = "px-4 py-2 rounded font-medium transition-all bg-warmgray text-neutral-700 hover:bg-neutral-200";
+        document.getElementById('btn-view-engine').className = "px-4 py-2 rounded font-medium transition-all bg-warmgray text-neutral-700 hover:bg-neutral-200";
+
+        // 顯示當前 View
+        document.getElementById(`view-${view}`).classList.remove('hidden');
+        document.getElementById(`view-${view}`).classList.add('flex');
+        
+        // 高亮按鈕
+        document.getElementById(`btn-view-${view}`).className = "px-4 py-2 rounded font-medium transition-all bg-ink text-paper shadow-md";
+
+        if (view === 'flipbook') {
+            init3DFlipbook();
+        }
+        renderMath();
+    }
+
+    function filterCategory(cat) {
+        currentCategoryFilter = cat;
+        // 更新按鈕樣式
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.className = "filter-btn px-3 py-1.5 rounded-full text-xs font-bold transition-all bg-warmgray text-neutral-700 hover:bg-neutral-200";
+        });
+        
+        // 點擊高亮
+        event.target.className = "filter-btn px-3 py-1.5 rounded-full text-xs font-bold transition-all bg-ink text-paper";
+        renderDashboardGrid();
+    }
+
+    function startCrawlerSimulatedLogs() {
+        const logs = [
+            "INFO: [09:15:02] Scheduler 集群啟動. ZooKeeper 接管 Master 節點選舉成功.",
+            "INFO: [09:15:05] Valkey 優先級高頻原料報價監視槽初始化成功.",
+            "CRAWL: [09:15:10] 探測 CCFGroup PTA 價格通道... 數據源無變化, SHA256 碰撞攔截成功.",
+            "CRAWL: [09:15:15] Webhook 觸發自 WGSN TrendCurve... 獲取 1 條新趨勢圖像.",
+            "IMAGE: [09:15:16] 開啟 K-Means 圖像色彩提取聚類... 生成 5 個 Hex 主調色盤.",
+            "INFO: [09:15:18] 運行 MinHash 局部敏感雜湊去重... 檢索無衝突. Duplo 排版分配成功.",
+            "CRAWL: [09:15:30] 探測 美國 ITC 關稅稅則 DOM 節點... 抓取 Section 122 稅率追加."
+        ];
+        
+        const terminal = document.getElementById('crawler-terminal-log');
+        logs.forEach((log, i) => {
+            setTimeout(() => {
+                addLogToTerminal(log);
+            }, i * 2000);
+        });
+    }
+
+    function addLogToTerminal(text) {
+        const terminal = document.getElementById('crawler-terminal-log');
+        if (!terminal) return;
+        const timeStr = new Date().toLocaleTimeString();
+        terminal.innerHTML += `<div>[${timeStr}] ${text}</div>`;
+        terminal.scrollTop = terminal.scrollHeight;
+    }
+
+    function showToast(title, text, type = 'success') {
+        const container = document.getElementById('toast-container');
+        const id = 'toast-' + Date.now();
+
+        const colors = {
+            success: 'bg-emerald-50 border-emerald-300 text-emerald-800',
+            info: 'bg-blue-50 border-blue-300 text-blue-800',
+            warning: 'bg-amber-50 border-amber-300 text-amber-800'
+        };
+
+        const icons = {
+            success: 'fa-circle-check text-emerald-600',
+            info: 'fa-circle-info text-blue-600',
+            warning: 'fa-triangle-exclamation text-amber-600'
+        };
+
+        const toastHtml = `
+            <div id="${id}" class="max-w-xs border p-4 rounded-lg shadow-lg flex items-start gap-3 transition-all duration-300 transform translate-x-12 opacity-0 pointer-events-auto bg-white ${colors[type]}">
+                <i class="fa-solid ${icons[type]} text-lg mt-0.5"></i>
+                <div>
+                    <h4 class="font-bold text-xs">${title}</h4>
+                    <p class="text-[11px] text-neutral-500 mt-1">${text}</p>
+                </div>
+            </div>
+        `;
+
+        container.innerHTML += toastHtml;
+
+        // 動態滑入
+        setTimeout(() => {
+            const el = document.getElementById(id);
+            if (el) {
+                el.classList.remove('translate-x-12', 'opacity-0');
+            }
+        }, 50);
+
+        // 自動淡出
+        setTimeout(() => {
+            const el = document.getElementById(id);
+            if (el) {
+                el.classList.add('translate-x-12', 'opacity-0');
+                setTimeout(() => el.remove(), 300);
+            }
+        }, 4000);
+    }
 </script>
+
 </body>
 </html>
